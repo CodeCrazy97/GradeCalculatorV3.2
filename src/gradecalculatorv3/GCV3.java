@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.TableModelEvent;
@@ -82,6 +83,8 @@ public class GCV3 extends javax.swing.JFrame {
         gradeTextField3 = new java.awt.TextField();
         weightTextField1 = new java.awt.TextField();
         button2 = new java.awt.Button();
+        semestersjComboBox1 = new javax.swing.JComboBox<>();
+        label4 = new java.awt.Label();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -105,7 +108,20 @@ public class GCV3 extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
+        gradesjTable.setToolTipText("");
+        gradesjTable.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        gradesjTable.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
         gradesjTable.setRowSelectionAllowed(false);
+        gradesjTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                gradesjTableMousePressed(evt);
+            }
+        });
+        gradesjTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                gradesjTableKeyReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(gradesjTable);
 
         classesComboBox.addActionListener(new ActionListener() {
@@ -114,6 +130,8 @@ public class GCV3 extends javax.swing.JFrame {
                     //Fetch the grades, weights, and assignment names for the currently displayed class and display.
                     setGradeInformation(classesComboBox.getSelectedItem().toString(), semester);
                 }catch(ClassNotFoundException cnfe) {
+
+                } catch (NullPointerException npe) {
 
                 }
             }
@@ -167,6 +185,7 @@ public class GCV3 extends javax.swing.JFrame {
             }
         });
 
+        whatIfGradeTextField.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         whatIfGradeTextField.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
 
         desiredGradeTextField.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -268,6 +287,11 @@ public class GCV3 extends javax.swing.JFrame {
             }
         });
 
+        semestersjComboBox1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+
+        label4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        label4.setText("Semester:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -275,45 +299,51 @@ public class GCV3 extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                            .addComponent(button4, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(69, 69, 69))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                            .addComponent(label6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(2, 2, 2)
+                                            .addComponent(whatIfGradeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(label7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(140, 140, 140)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(label8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(2, 2, 2)
+                                                .addComponent(desiredGradeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(label9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addContainerGap(71, Short.MAX_VALUE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(deleteGradeByIndexButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(addGradeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(deleteIndexTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(112, 112, 112)
                         .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(24, 24, 24)
-                        .addComponent(classesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addComponent(button4, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(69, 69, 69))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addComponent(label6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(2, 2, 2)
-                                    .addComponent(whatIfGradeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(label7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(140, 140, 140)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(label8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(2, 2, 2)
-                                        .addComponent(desiredGradeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(label9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addContainerGap(71, Short.MAX_VALUE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(deleteGradeByIndexButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(addGradeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(classesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(223, 223, 223)
+                        .addComponent(label4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(deleteIndexTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addComponent(semestersjComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
             .addGroup(layout.createSequentialGroup()
                 .addGap(122, 122, 122)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -354,7 +384,10 @@ public class GCV3 extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(classesComboBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(label1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(label1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(semestersjComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(label4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -424,6 +457,13 @@ public class GCV3 extends javax.swing.JFrame {
         whatIfGradeTextField.getAccessibleContext().setAccessibleName("gradeDesiredTextField");
         desiredGradeTextField.getAccessibleContext().setAccessibleName("gradeNecessaryTextField");
         button4.getAccessibleContext().setAccessibleName("calculateButton");
+        semestersjComboBox1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                //Show the classes for the currently selected semester.
+                semester = semestersjComboBox1.getSelectedItem().toString();
+                setClasses(semester);
+            }
+        });
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -448,10 +488,19 @@ public class GCV3 extends javax.swing.JFrame {
 
             }
 
-            JLabel label = new JLabel("If you make " + whatIfGradeTextField.getText() + "% on remaining coursework, you'll have " + willHaveThisGrade + "% overall.\n"
-                    + " In order to get " + desiredGradeTextField.getText() + "% overall, you'll need " + necessaryGrade + "% on remaining coursework.");
-            label.setFont(new Font("Arial", Font.BOLD, 16));
-            JOptionPane.showMessageDialog(null, label, "What-If Results", JOptionPane.INFORMATION_MESSAGE);
+            //Create a jtextarea to yield the what-if results. 
+            //(JTextAreas allow for font manipulation, as well as multi-line text.)
+            JTextArea jta;
+            if (necessaryGrade < 0 || necessaryGrade > 150) {  //In this case, most likely the student has completed all coursework or cannot reasonably make a specific grade in the course; necessaryGrade is irrelevant.
+                jta = new JTextArea("If you make " + whatIfGradeTextField.getText() + "% on remaining coursework, you'll have " + willHaveThisGrade + "% overall.\n"
+                        + " Furthermore, it appears that you have either completed all coursework OR will need an\n astronomical grade (>150%) on remaining coursework to earn " + desiredGradeTextField.getText() + "%.");
+            } else {                
+                jta = new JTextArea("If you make " + whatIfGradeTextField.getText() + "% on remaining coursework, you'll have " + willHaveThisGrade + "% overall.\n"
+                        + "\n In order to get " + desiredGradeTextField.getText() + "% overall, you'll need " + necessaryGrade + "% on remaining coursework.");
+            }
+            jta.setEditable(false);
+            jta.setFont(new Font("Arial", Font.BOLD, 16));
+            JOptionPane.showMessageDialog(null, jta, "What-If Results", JOptionPane.INFORMATION_MESSAGE);
 
         } catch (NumberFormatException nfe) {
 
@@ -463,7 +512,6 @@ public class GCV3 extends javax.swing.JFrame {
         whatIfGradeTextField.setText("");
 
         try {
-            System.out.println(classesComboBox.getSelectedItem().toString());
             setGradeInformation(classesComboBox.getSelectedItem().toString(), semester);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(GCV3.class.getName()).log(Level.SEVERE, null, ex);
@@ -483,6 +531,10 @@ public class GCV3 extends javax.swing.JFrame {
 
     //Refresh Button clicked.
     private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
+        resetData(true);
+    }//GEN-LAST:event_button1ActionPerformed
+
+    private void resetData(boolean allowWarningMessage) {
         //New information about grades has been entered - reset data structures, but DON'T send anything to database.
         assignmentsInfo.clear();  //Get rid of old grades (descriptions, grade (decimal percent), and weight (%)).
         boolean showWarningMessageOnlyOnce = false;
@@ -516,12 +568,12 @@ public class GCV3 extends javax.swing.JFrame {
                 continue;
             }
         }
-        if (showWarningMessageOnlyOnce) {
+        if (allowWarningMessage && showWarningMessageOnlyOnce) {
             JOptionPane.showMessageDialog(this, "Something is wrong with your input.", "ENTRY ERROR", JOptionPane.WARNING_MESSAGE);
         }
         //Reset labels about percentage points and current grade in the class.
         resetPPointsAndCurrentGradeLabels();
-    }//GEN-LAST:event_button1ActionPerformed
+    }
 
     //The only difference between this updateDatabaseButton and refreshButton is that the updater sends the 
     //newly entered data to the database. Both buttons will refresh calculations and data structures.
@@ -541,10 +593,10 @@ public class GCV3 extends javax.swing.JFrame {
         for (int i = 0; i < gradesjTable.getRowCount(); i++) {  //Iterate over all rows.            
             try {
                 assignmentsInfo.add(gradesjTable.getModel().getValueAt(i, 0).toString());  //Description    
-                double grade = evaluateText(gradesjTable.getModel().getValueAt(i, 1).toString());
+                double grade = evaluateText(gradesjTable.getModel().getValueAt(i, 1).toString());  //Evaluate the grade entered; could be in the form of "125/140", or "100-93" or some mathematical entry.
                 assignmentsInfo.add("" + grade / 100.0);  //Grade (as a decimal)
                 gradesjTable.getModel().setValueAt(grade, i, 1);  //Put the calculation in the cell.
-                double weight = evaluateText(gradesjTable.getModel().getValueAt(i, 2).toString());
+                double weight = evaluateText(gradesjTable.getModel().getValueAt(i, 2).toString());  //Evaluate the weight entered; could be in the form of "125/140", or "100-93" or some mathematical entry.
                 assignmentsInfo.add("" + weight);  //Weight                
                 gradesjTable.getModel().setValueAt(weight, i, 2);  //Put the calculation in the cell.
             } catch (NumberFormatException nfe) {
@@ -665,6 +717,23 @@ public class GCV3 extends javax.swing.JFrame {
         });
     }//GEN-LAST:event_classesComboBoxActionPerformed
 
+    //gradesjTableKeyReleased is called whenever the tab key is pressed (possibly other times, too).
+    //Will want to set the cursor to blinking in the newly tabbed-into cell, as 
+    //as reset the data (overall grade, percentage points earned) because the last
+    //selected cell may have new data in it.
+    private void gradesjTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_gradesjTableKeyReleased
+        setCursorBlinkingInSelectedTableCell();
+        resetData(false);
+    }//GEN-LAST:event_gradesjTableKeyReleased
+
+    //gradesjTableMousePressed is called whenever the mouse is pressed.
+    //Will want to set the cursor to blinking in the newly pressed-into cell, as 
+    //as reset the data (overall grade, percentage points earned) because the last
+    //selected cell may have new data in it.
+    private void gradesjTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gradesjTableMousePressed
+        setCursorBlinkingInSelectedTableCell();
+    }//GEN-LAST:event_gradesjTableMousePressed
+
     /**
      * @param args the command line arguments
      */
@@ -710,10 +779,24 @@ public class GCV3 extends javax.swing.JFrame {
                     semester = "FALL ";
                 }
                 semester += Calendar.getInstance().get(Calendar.YEAR);
-
+                try {
+                    //Put the semesters in the combo box.
+                    LinkedList<String> semesters = new Querying().getSemesters();
+                    for (int i = 0; i < semesters.size(); i++) {
+                        semestersjComboBox1.addItem(semesters.get(i));
+                    }
+                    
+                    
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(GCV3.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                semester = semestersjComboBox1.getItemAt(0);
                 //Put the classes for the current semester in the classes combo box.
                 setClasses(semester);
-
+                
+                semestersjComboBox1.setSelectedIndex(0);  //Select the last semester (the most recent one).
+                
                 pPointsLabel.setText("" + Math.round(getTotalPPoints() * 10) / 10.0);
 
                 gcv3Instance.setVisible(true);
@@ -722,7 +805,15 @@ public class GCV3 extends javax.swing.JFrame {
         });
     }
 
+    public void setCursorBlinkingInSelectedTableCell() {
+        //This method will make the cursor blink in the selected cell of the gradesjTable.
+        gradesjTable.editCellAt(gradesjTable.getSelectedRow(), gradesjTable.getSelectedColumn());
+        gradesjTable.getEditorComponent().requestFocusInWindow();
+    }
+
     public static void setClasses(String semester) {
+        //Clear out all classes that had previously been displayed.
+        classesComboBox.removeAllItems();
         LinkedList<String> collegeClasses = new LinkedList<String>();
         try {
             Querying database = new Querying();
@@ -731,6 +822,7 @@ public class GCV3 extends javax.swing.JFrame {
                 classesComboBox.addItem(collegeClasses.get(i));
             }
 
+            classesComboBox.setSelectedIndex(0);
             //Fetch the grades, weights, and assignment names for the currently displayed class and display.
             setGradeInformation(classesComboBox.getSelectedItem().toString(), semester);
 
@@ -833,11 +925,13 @@ public class GCV3 extends javax.swing.JFrame {
     private java.awt.Label label1;
     private java.awt.Label label2;
     private java.awt.Label label3;
+    private java.awt.Label label4;
     private java.awt.Label label6;
     private java.awt.Label label7;
     private java.awt.Label label8;
     private java.awt.Label label9;
     private static java.awt.Label pPointsLabel;
+    private static javax.swing.JComboBox<String> semestersjComboBox1;
     private java.awt.Button updateDatabaseButton;
     private java.awt.TextField weightTextField1;
     private java.awt.TextField whatIfGradeTextField;

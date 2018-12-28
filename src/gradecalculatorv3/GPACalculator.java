@@ -1,5 +1,6 @@
 package gradecalculatorv3;
 
+import java.awt.Color;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import javax.swing.JOptionPane;
@@ -8,6 +9,7 @@ public class GPACalculator extends javax.swing.JFrame {
     
     public GPACalculator() {
         initComponents();
+        this.getContentPane().setBackground(Color.yellow);
         letterGradeTextField1.requestFocusInWindow();  //Set cursor to blinking in this text field.
     }
 

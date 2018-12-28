@@ -21,7 +21,7 @@ public class Querying {
             LinkedList<String> semesters = new LinkedList<>();
 
             Connection conn = DriverManager.getConnection(url, "root", "");
-            String sqlString = "SELECT semester FROM grades GROUP BY semester;";
+            String sqlString = "SELECT semester FROM grades GROUP BY semester ORDER BY SUBSTRING(semester, LENGTH(semester) - 4) DESC, SUBSTRING(semester, 1) ASC;";
             PreparedStatement stmt = conn.prepareStatement(sqlString);
 
             ResultSet rs = stmt.executeQuery();
