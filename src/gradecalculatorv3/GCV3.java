@@ -494,7 +494,7 @@ public class GCV3 extends javax.swing.JFrame {
             if (necessaryGrade < 0 || necessaryGrade > 150) {  //In this case, most likely the student has completed all coursework or cannot reasonably make a specific grade in the course; necessaryGrade is irrelevant.
                 jta = new JTextArea("If you make " + whatIfGradeTextField.getText() + "% on remaining coursework, you'll have " + willHaveThisGrade + "% overall.\n"
                         + " Furthermore, it appears that you have either completed all coursework OR will need an\n astronomical grade (>150%) on remaining coursework to earn " + desiredGradeTextField.getText() + "%.");
-            } else {                
+            } else {
                 jta = new JTextArea("If you make " + whatIfGradeTextField.getText() + "% on remaining coursework, you'll have " + willHaveThisGrade + "% overall.\n"
                         + "\n In order to get " + desiredGradeTextField.getText() + "% overall, you'll need " + necessaryGrade + "% on remaining coursework.");
             }
@@ -655,7 +655,8 @@ public class GCV3 extends javax.swing.JFrame {
 
     private void createNewClassButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createNewClassButtonActionPerformed
         if (!classNameTextField1.isVisible()) {  //First click.
-            //Set text to defaults.
+            //Set text to defaults. Also change text in button.
+            createNewClassButton.setLabel("Submit");
 
             classNameTextField1.setText("Class name (6 chars)");
             descriptionTextField2.setText("Initial assignment description");
@@ -668,6 +669,10 @@ public class GCV3 extends javax.swing.JFrame {
             weightTextField1.setVisible(true);
             revalidate();
         } else {  //Second click.
+            // Reset text in button.
+            createNewClassButton.setLabel("Add A Class");
+            createNewClassButton.setBounds(697, 477, 96, 24);  //Fits text "Add A Class"
+
             classNameTextField1.setVisible(false);
             descriptionTextField2.setVisible(false);
             gradeTextField3.setVisible(false);
@@ -679,9 +684,13 @@ public class GCV3 extends javax.swing.JFrame {
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(GCV3.class.getName()).log(Level.SEVERE, null, ex);
             }
-            q.createAndInitializeNewClass(classNameTextField1.getText(), "" + Double.parseDouble(gradeTextField3.getText()) / 100.0, weightTextField1.getText(), descriptionTextField2.getText(), semester);
-            //Place the new class in the combo box.
-            classesComboBox.addItem(classNameTextField1.getText());
+            try {
+                q.createAndInitializeNewClass(classNameTextField1.getText(), "" + Double.parseDouble(gradeTextField3.getText()) / 100.0, weightTextField1.getText(), descriptionTextField2.getText(), semester);
+                //Place the new class in the combo box.
+                classesComboBox.addItem(classNameTextField1.getText());
+            } catch (NumberFormatException nfe) {
+                JOptionPane.showMessageDialog(this, "Something is wrong with your input. The class was NOT added to the database.", "ENTRY ERROR", JOptionPane.ERROR_MESSAGE);
+            }
             revalidate();
         }
     }//GEN-LAST:event_createNewClassButtonActionPerformed
@@ -785,18 +794,17 @@ public class GCV3 extends javax.swing.JFrame {
                     for (int i = 0; i < semesters.size(); i++) {
                         semestersjComboBox1.addItem(semesters.get(i));
                     }
-                    
-                    
+
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(GCV3.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+
                 semester = semestersjComboBox1.getItemAt(0);
                 //Put the classes for the current semester in the classes combo box.
                 setClasses(semester);
-                
+
                 semestersjComboBox1.setSelectedIndex(0);  //Select the last semester (the most recent one).
-                
+
                 pPointsLabel.setText("" + Math.round(getTotalPPoints() * 10) / 10.0);
 
                 gcv3Instance.setVisible(true);

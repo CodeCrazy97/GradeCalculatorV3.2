@@ -30,7 +30,7 @@ public class GradeCalculatorV3 {
 
     public static void main(String[] args) throws ClassNotFoundException, IOException, InterruptedException {
         //Remove aria_log.* file (this file causes mysqld startup to fail).
-        Runtime.getRuntime().exec("cmd /c start \"\" \"C:\\Users\\Ethan_2\\Documents\\Programming Languages\\Batch\\remove_aria_log_file.bat\"");
+        Runtime.getRuntime().exec("cmd /c start \"\" \"C:\\Users\\Ethan_2\\Documents\\Projects\\Batch\\remove_aria_log_file.bat\"");
         
         boolean result = GradeCalculatorV3.isRunning("mysqld.exe");
         if (!result) {
