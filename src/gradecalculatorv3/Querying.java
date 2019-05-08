@@ -29,6 +29,9 @@ public class Querying {
             while (rs.next()) {
                 semesters.add(rs.getString(1));
             }
+
+            stmt.close();
+            rs.close();
             conn.close();
             return semesters;
         } catch (Exception e) {
@@ -51,6 +54,9 @@ public class Querying {
             while (rs.next()) {
                 classes.add(rs.getString(1));
             }
+
+            stmt.close();
+            rs.close();
             conn.close();
             return classes;
         } catch (Exception e) {
@@ -78,6 +84,9 @@ public class Querying {
                 gradesWeightsDesc.add(rs.getString(2));
                 gradesWeightsDesc.add(rs.getString(3));
             }
+
+            stmt.close();
+            rs.close();
             conn.close();
             return gradesWeightsDesc;
         } catch (Exception e) {
@@ -99,6 +108,8 @@ public class Querying {
             // execute the preparedstatement
             stmt.execute();
             JOptionPane.showMessageDialog(null, "Successfully added the class.", "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
+
+            stmt.close();
             conn.close();
         } catch (Exception e) {
             System.err.println("Got an exception!");
@@ -120,6 +131,9 @@ public class Querying {
             while (rs.next()) {
                 credits += rs.getDouble(1);
             }
+
+            stmt.close();
+            rs.close();
             conn.close();
             return credits;
         } catch (Exception e) {
@@ -154,6 +168,9 @@ public class Querying {
                     // no quality points earned
                 }
             }
+
+            stmt.close();
+            rs.close();
             conn.close();
 
             return qualityPoints / totalCredits;
@@ -176,6 +193,9 @@ public class Querying {
             while (rs.next()) {
                 courses.add(rs.getString(1));
             }
+
+            stmt.close();
+            rs.close();
             conn.close();
             return courses;
         } catch (Exception e) {
@@ -221,6 +241,8 @@ public class Querying {
             String sqlString = "DELETE FROM courses WHERE className = '" + className + "';";
             PreparedStatement stmt = conn.prepareStatement(sqlString);
             stmt.executeUpdate();
+
+            stmt.close();
             conn.close();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
@@ -250,6 +272,7 @@ public class Querying {
                 // execute the preparedstatement
                 stmt.execute();
 
+                stmt.close();
                 conn.close();
             } catch (Exception e) {
                 System.err.println("Got an exception!");
@@ -258,7 +281,7 @@ public class Querying {
         }
     }
 
-    public void submitNewClass(String className, String finalGrade, String credits, String semester) {
+    public void submitNewClass(String className, String finalGrade, String credits, String semester) throws Exception {
         String sqlString = "INSERT INTO courses (className, finalGrade, credits, semester) VALUES ('" + className + "','" + finalGrade + "'," + credits + ",'" + semester + "');";
         //Now, execute the insert statement.
         try {
@@ -267,9 +290,10 @@ public class Querying {
             // execute the preparedstatement
             stmt.execute();
 
+            stmt.close();
             conn.close();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);  // Show the exception message.
+            throw e;
         }
     }
 

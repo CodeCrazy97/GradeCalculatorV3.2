@@ -39,7 +39,7 @@ public class EditingClassesForm extends javax.swing.JPanel {
                 GPACalculator gpacalc = new GPACalculator();
                 String[] arguments = {};
                 gpacalc.main(arguments);
-
+                
             }
         };
         frame.addWindowListener(exitListener);  // Add the custom designed listener.
@@ -48,7 +48,7 @@ public class EditingClassesForm extends javax.swing.JPanel {
         finalGradeTextField.setEditable(false);
         semesterTextField.setEditable(false);
         creditsTextField.setEditable(false);
-
+        
         try {
             // fetch courses, place them in the combo box
             LinkedList<String> courses = new Querying().getCourses();
@@ -59,7 +59,7 @@ public class EditingClassesForm extends javax.swing.JPanel {
         } catch (ClassNotFoundException ex) {
             JOptionPane.showMessageDialog(null, ex);  // Show the exception message.
         }
-
+        
     }
 
     /**
@@ -180,14 +180,14 @@ public class EditingClassesForm extends javax.swing.JPanel {
             finalGradeTextField.setText("");
             semesterTextField.setText("");
             creditsTextField.setText("");
-
+            
             classNameTextField.requestFocusInWindow();
             addAClassButton.setText("Submit");
             classNameTextField.setEditable(true);
             finalGradeTextField.setEditable(true);
             semesterTextField.setEditable(true);
             creditsTextField.setEditable(true);
-
+            
         } else {
             // Try submitting to database.
             try {
@@ -201,8 +201,9 @@ public class EditingClassesForm extends javax.swing.JPanel {
                 classesComboBox.setSelectedIndex(classesComboBox.getItemCount() - 1);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);  // Show the exception message.
+                classesComboBox.setSelectedIndex(0);
             }
-
+            
             classesComboBox.setVisible(true);
             deleteButton.setText("Delete Class");
             addAClassButton.setText("Add a Class");
@@ -210,7 +211,7 @@ public class EditingClassesForm extends javax.swing.JPanel {
             finalGradeTextField.setEditable(false);
             semesterTextField.setEditable(false);
             creditsTextField.setEditable(false);
-
+            
         }
     }//GEN-LAST:event_addAClassButtonActionPerformed
 
