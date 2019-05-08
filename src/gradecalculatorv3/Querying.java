@@ -138,9 +138,24 @@ public class Querying {
         }
     }
 
+    public void submitNewClass(String className, String finalGrade, String credits, String semester) {
+        String sqlString = "INSERT INTO courses (className, finalGrade, credits, semester) VALUES ('" + className + "','" + finalGrade + "'," + credits + ",'" + semester + "');";
+        //Now, execute the insert statement.
+        try {
+            Connection conn = DriverManager.getConnection(url, "root", "");
+            PreparedStatement stmt = conn.prepareStatement(sqlString);
+            // execute the preparedstatement
+            stmt.execute();
+
+            conn.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);  // Show the exception message.
+        }
+    }
+
     //Fix the apostrophe and newline so that they fit in MySQL properly.
-    public String fixStringForMySQL(String s) {       
-        String s2 = s.replace("\'", "\\'");        
+    public String fixStringForMySQL(String s) {
+        String s2 = s.replace("\'", "\\'");
         s2 = s2.replace("\n", "\\n");
         return s2;
     }

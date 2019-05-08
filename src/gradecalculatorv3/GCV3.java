@@ -252,6 +252,9 @@ public class GCV3 extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 classNameTextField1FocusGained(evt);
             }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                classNameTextField1FocusLost(evt);
+            }
         });
 
         descriptionTextField2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -259,6 +262,9 @@ public class GCV3 extends javax.swing.JFrame {
         descriptionTextField2.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 descriptionTextField2FocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                descriptionTextField2FocusLost(evt);
             }
         });
 
@@ -268,6 +274,9 @@ public class GCV3 extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 gradeTextField3FocusGained(evt);
             }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                gradeTextField3FocusLost(evt);
+            }
         });
 
         weightTextField1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -275,6 +284,9 @@ public class GCV3 extends javax.swing.JFrame {
         weightTextField1.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 weightTextField1FocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                weightTextField1FocusLost(evt);
             }
         });
 
@@ -742,6 +754,30 @@ public class GCV3 extends javax.swing.JFrame {
     private void gradesjTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gradesjTableMousePressed
         setCursorBlinkingInSelectedTableCell();
     }//GEN-LAST:event_gradesjTableMousePressed
+
+    private void classNameTextField1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_classNameTextField1FocusLost
+        if (classNameTextField1.getText().equals("")) {
+            classNameTextField1.setText("Class name (6 chars)");
+        }
+    }//GEN-LAST:event_classNameTextField1FocusLost
+
+    private void descriptionTextField2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_descriptionTextField2FocusLost
+        if (descriptionTextField2.getText().equals("")) {
+            descriptionTextField2.setText("Initial assignment description");
+        }
+    }//GEN-LAST:event_descriptionTextField2FocusLost
+
+    private void gradeTextField3FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_gradeTextField3FocusLost
+        if (gradeTextField3.getText().equals("")) {
+            gradeTextField3.setText("Grade received (%)");
+        }
+    }//GEN-LAST:event_gradeTextField3FocusLost
+
+    private void weightTextField1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_weightTextField1FocusLost
+        if (weightTextField1.getText().equals("")) {
+            weightTextField1.setText("Assignment weight (%)");
+        }
+    }//GEN-LAST:event_weightTextField1FocusLost
 
     /**
      * @param args the command line arguments

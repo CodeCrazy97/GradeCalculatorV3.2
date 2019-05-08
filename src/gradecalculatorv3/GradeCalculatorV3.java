@@ -8,6 +8,7 @@ Ethan Vaughan
 
 12/20/2018 - added GPA Calculator functionality.
 12/20/2018 - officially finished Grade Calculator, Version 3.
+05/07/2019 - allowed storing of final grades; tweaked grade calculator
 
 ################################################################################
 ################################################################################
