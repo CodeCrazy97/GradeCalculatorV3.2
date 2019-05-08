@@ -8,6 +8,9 @@ package gradecalculatorv3;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -45,6 +48,18 @@ public class EditingClassesForm extends javax.swing.JPanel {
         finalGradeTextField.setEditable(false);
         semesterTextField.setEditable(false);
         creditsTextField.setEditable(false);
+
+        try {
+            // fetch courses, place them in the combo box
+            LinkedList<String> courses = new Querying().getCourses();
+            classesComboBox.removeAllItems();
+            for (int i = 0; i < courses.size(); i++) {
+                classesComboBox.addItem(courses.get(i));
+            }
+        } catch (ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, ex);  // Show the exception message.
+        }
+
     }
 
     /**
@@ -66,8 +81,14 @@ public class EditingClassesForm extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         addAClassButton = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
 
         classesComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        classesComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                classesComboBoxActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Class name:");
 
@@ -81,6 +102,13 @@ public class EditingClassesForm extends javax.swing.JPanel {
         addAClassButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addAClassButtonActionPerformed(evt);
+            }
+        });
+
+        deleteButton.setText("Delete Class");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
             }
         });
 
@@ -108,7 +136,9 @@ public class EditingClassesForm extends javax.swing.JPanel {
                             .addComponent(finalGradeTextField))
                         .addGap(103, 103, 103))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(addAClassButton)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(deleteButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(addAClassButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(134, 134, 134))))
         );
         layout.setVerticalGroup(
@@ -135,7 +165,9 @@ public class EditingClassesForm extends javax.swing.JPanel {
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(41, 41, 41)
                 .addComponent(addAClassButton)
-                .addGap(48, 48, 48))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(deleteButton)
+                .addGap(16, 16, 16))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -143,6 +175,7 @@ public class EditingClassesForm extends javax.swing.JPanel {
         if (addAClassButton.getText().equals("Add a Class")) {
             classesComboBox.setVisible(false);
             addAClassButton.setText("Submit");
+            deleteButton.setText("Cancel");
             classNameTextField.setText("");
             finalGradeTextField.setText("");
             semesterTextField.setText("");
@@ -159,18 +192,19 @@ public class EditingClassesForm extends javax.swing.JPanel {
             // Try submitting to database.
             try {
                 Querying q = new Querying();
-                q.submitNewClass(classNameTextField.getText(), finalGradeTextField.getText(), creditsTextField.getText(), semesterTextField.getText());
+                q.submitNewClass(classNameTextField.getText().toUpperCase(), finalGradeTextField.getText().toUpperCase(), creditsTextField.getText(), semesterTextField.getText().toUpperCase());
                 JOptionPane.showMessageDialog(this,
                         "Successfully added the class.",
                         "Class Added",
                         JOptionPane.INFORMATION_MESSAGE);
-                classesComboBox.addItem(classNameTextField.getText());
+                classesComboBox.addItem(classNameTextField.getText().toUpperCase());
                 classesComboBox.setSelectedIndex(classesComboBox.getItemCount() - 1);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);  // Show the exception message.
             }
 
             classesComboBox.setVisible(true);
+            deleteButton.setText("Delete Class");
             addAClassButton.setText("Add a Class");
             classNameTextField.setEditable(false);
             finalGradeTextField.setEditable(false);
@@ -180,12 +214,55 @@ public class EditingClassesForm extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_addAClassButtonActionPerformed
 
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        if (deleteButton.getText().equals("Cancel")) {  //canceling out of adding a class
+
+            classesComboBox.setVisible(true);
+            deleteButton.setText("Delete Class");
+            addAClassButton.setText("Add a Class");
+            classNameTextField.setEditable(false);
+            finalGradeTextField.setEditable(false);
+            semesterTextField.setEditable(false);
+            creditsTextField.setEditable(false);
+            classesComboBox.setSelectedIndex(0);
+        } else {
+            String className = classesComboBox.getSelectedItem().toString();
+            System.out.println("selected index: " + classesComboBox.getSelectedIndex());
+            
+            try {
+                // remove it from the database
+                Querying q = new Querying();
+                q.deleteClass(className);
+                System.out.println(classesComboBox.getItemCount());
+                classesComboBox.removeItemAt(classesComboBox.getSelectedIndex());
+                JOptionPane.showMessageDialog(null, "Successfully deleted the class!");  // Show the exception message.
+            } catch (ClassNotFoundException ex) {
+                JOptionPane.showMessageDialog(null, ex);  // Show the exception message.
+            }
+        }
+    }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void classesComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_classesComboBoxActionPerformed
+        if (classesComboBox.getItemCount() > 0) {
+            try {
+                String courseInfo[] = new Querying().getCourseInfo(classesComboBox.getSelectedItem().toString());
+                classNameTextField.setText(courseInfo[0]);
+                finalGradeTextField.setText(courseInfo[1]);
+                semesterTextField.setText(courseInfo[2]);
+                creditsTextField.setText(courseInfo[3]);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(EditingClassesForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_classesComboBoxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addAClassButton;
     private javax.swing.JTextField classNameTextField;
     private javax.swing.JComboBox<String> classesComboBox;
     private javax.swing.JTextField creditsTextField;
+    private javax.swing.JButton deleteButton;
     private javax.swing.JTextField finalGradeTextField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

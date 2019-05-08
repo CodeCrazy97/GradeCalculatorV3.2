@@ -107,6 +107,70 @@ public class Querying {
         }
     }
 
+    public LinkedList<String> getCourses() {
+        try {
+            LinkedList<String> courses = new LinkedList<>();
+
+            Connection conn = DriverManager.getConnection(url, "root", "");
+            String sqlString = "SELECT className FROM courses ORDER BY className;";
+            PreparedStatement stmt = conn.prepareStatement(sqlString);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                courses.add(rs.getString(1));
+            }
+            conn.close();
+            return courses;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);  // Show the exception message.
+            System.err.println("No courses returned.");
+            System.err.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public String[] getCourseInfo(String className) {
+        try {
+            String info[] = new String[4];
+
+            Connection conn = DriverManager.getConnection(url, "root", "");
+            String sqlString = "SELECT * FROM courses where className = '" + className + "';";
+
+            PreparedStatement stmt = conn.prepareStatement(sqlString);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                info[0] = rs.getString(1);
+                info[1] = rs.getString(2);
+                info[2] = rs.getString(3);
+                info[3] = rs.getString(4);
+            }
+            stmt.close();
+            rs.close();
+            conn.close();
+            return info;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);  // Show the exception message.
+            System.err.println("No courses returned.");
+            System.err.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public void deleteClass(String className) {
+        try {
+            Connection conn = DriverManager.getConnection(url, "root", "");
+            String sqlString = "DELETE FROM courses WHERE className = '" + className + "';";
+            PreparedStatement stmt = conn.prepareStatement(sqlString);
+            stmt.executeUpdate();
+            conn.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
     public void sendNewGradesToDatabase(LinkedList<String> newGrades, String className, String semester) throws SQLException {
         //First, remove any grades already present for the specified class (this avoids repeating grades).        
         try {
