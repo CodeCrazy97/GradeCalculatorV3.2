@@ -235,6 +235,9 @@ public class GCV3 extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 deleteIndexTextFieldFocusGained(evt);
             }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                deleteIndexTextFieldFocusLost(evt);
+            }
         });
 
         createNewClassButton.setBackground(new java.awt.Color(204, 255, 204));
@@ -778,6 +781,12 @@ public class GCV3 extends javax.swing.JFrame {
             weightTextField1.setText("Assignment weight (%)");
         }
     }//GEN-LAST:event_weightTextField1FocusLost
+
+    private void deleteIndexTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_deleteIndexTextFieldFocusLost
+        if (deleteIndexTextField.getText().equals("")) {
+            deleteIndexTextField.setText("Zero-indexed");
+        }
+    }//GEN-LAST:event_deleteIndexTextFieldFocusLost
 
     /**
      * @param args the command line arguments

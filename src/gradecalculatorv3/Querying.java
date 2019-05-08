@@ -107,6 +107,62 @@ public class Querying {
         }
     }
 
+    public double getTotalCreditHours() {
+        try {
+            double credits = 0.0;
+
+            Connection conn = DriverManager.getConnection(url, "root", "");
+            String sqlString = "SELECT sum(credits) FROM courses;";
+            PreparedStatement stmt = conn.prepareStatement(sqlString);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                credits += rs.getDouble(1);
+            }
+            conn.close();
+            return credits;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);  // Show the exception message.
+            return 0.0;
+        }
+    }
+
+    public double getGPA() {
+        try {
+            Connection conn = DriverManager.getConnection(url, "root", "");
+            String sqlString = "SELECT finalGrade, credits FROM courses;";
+            PreparedStatement stmt = conn.prepareStatement(sqlString);
+
+            ResultSet rs = stmt.executeQuery();
+
+            double totalCredits = 0.0;
+            double qualityPoints = 0.0;
+            while (rs.next()) {
+                String grade = rs.getString(1);
+                double credits = rs.getDouble(2);
+                totalCredits += credits;
+                if (grade.equals("A")) {
+                    qualityPoints += 4.0 * credits;
+                } else if (grade.equals("B")) {
+                    qualityPoints += 3.0 * credits;
+                } else if (grade.equals("C")) {
+                    qualityPoints += 2.0 * credits;
+                } else if (grade.equals("D")) {
+                    qualityPoints += 1.0 * credits;
+                } else {
+                    // no quality points earned
+                }
+            }
+            conn.close();
+
+            return qualityPoints / totalCredits;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);  // Show the exception message.
+            return 0.0;
+        }
+    }
+
     public LinkedList<String> getCourses() {
         try {
             LinkedList<String> courses = new LinkedList<>();

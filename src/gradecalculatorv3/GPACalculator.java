@@ -3,6 +3,8 @@ package gradecalculatorv3;
 import java.awt.Color;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -13,6 +15,20 @@ public class GPACalculator extends javax.swing.JFrame {
         initComponents();
         this.getContentPane().setBackground(Color.yellow);
         letterGradeTextField1.requestFocusInWindow();  //Set cursor to blinking in this text field.
+
+        // show completed credit hours
+        try {
+            double credits = new Querying().getTotalCreditHours();
+            completedGPAHoursTextField2.setText("" + credits);
+
+            double gpa = new Querying().getGPA();
+
+            // format to 3 decimal places
+            gpa = Math.round(gpa * 1000.0) / 1000.0;
+            currentGPATextField1.setText("" + gpa);
+        } catch (ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, ex);  // Show the exception message.
+        }
 
     }
 
