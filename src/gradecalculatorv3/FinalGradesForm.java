@@ -24,6 +24,8 @@ public class FinalGradesForm extends javax.swing.JPanel {
      */
     public FinalGradesForm(JFrame frame) {
         initComponents();
+        super.setOpaque(true);
+        this.setBackground(Color.cyan);
 
         // Create the JFrame for this window.
         frame.add(this);
@@ -86,6 +88,7 @@ public class FinalGradesForm extends javax.swing.JPanel {
         deleteButton = new javax.swing.JButton();
 
         setForeground(new java.awt.Color(102, 255, 255));
+        setOpaque(false);
 
         classesComboBox.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         classesComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));

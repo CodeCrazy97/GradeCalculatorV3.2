@@ -302,7 +302,7 @@ public class GPACalculator extends javax.swing.JFrame {
     private void addClassButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClassButtonActionPerformed
 
         // Show the classes editor screen.
-        JFrame frame = new JFrame("Adding Classes");
+        JFrame frame = new JFrame("Classes");
         FinalGradesForm classAdder = new FinalGradesForm(frame);
         this.dispose();
     }//GEN-LAST:event_addClassButtonActionPerformed
