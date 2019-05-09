@@ -4,7 +4,6 @@ Class to handle queries into the database (selecting, inserting, deleting, etc.)
 package gradecalculatorv3;
 
 import java.sql.*;
-import java.util.Calendar;
 import java.util.LinkedList;
 import javax.swing.JOptionPane;
 

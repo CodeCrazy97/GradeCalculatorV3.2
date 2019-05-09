@@ -5,12 +5,11 @@
  */
 package gradecalculatorv3;
 
+import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -18,12 +17,12 @@ import javax.swing.JOptionPane;
  *
  * @author Ethan_2
  */
-public class EditingClassesForm extends javax.swing.JPanel {
+public class FinalGradesForm extends javax.swing.JPanel {
 
     /**
      * Creates new form EditingClassesForm
      */
-    public EditingClassesForm(JFrame frame) {
+    public FinalGradesForm(JFrame frame) {
         initComponents();
 
         // Create the JFrame for this window.
@@ -39,7 +38,7 @@ public class EditingClassesForm extends javax.swing.JPanel {
                 GPACalculator gpacalc = new GPACalculator();
                 String[] arguments = {};
                 gpacalc.main(arguments);
-                
+
             }
         };
         frame.addWindowListener(exitListener);  // Add the custom designed listener.
@@ -48,7 +47,10 @@ public class EditingClassesForm extends javax.swing.JPanel {
         finalGradeTextField.setEditable(false);
         semesterTextField.setEditable(false);
         creditsTextField.setEditable(false);
-        
+
+        // make pressing the Enter key the same as clicking the mouse
+        frame.getRootPane().setDefaultButton(addAClassButton);
+
         try {
             // fetch courses, place them in the combo box
             LinkedList<String> courses = new Querying().getCourses();
@@ -59,7 +61,7 @@ public class EditingClassesForm extends javax.swing.JPanel {
         } catch (ClassNotFoundException ex) {
             JOptionPane.showMessageDialog(null, ex);  // Show the exception message.
         }
-        
+
     }
 
     /**
@@ -83,6 +85,9 @@ public class EditingClassesForm extends javax.swing.JPanel {
         addAClassButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
 
+        setForeground(new java.awt.Color(102, 255, 255));
+
+        classesComboBox.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         classesComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         classesComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -90,14 +95,66 @@ public class EditingClassesForm extends javax.swing.JPanel {
             }
         });
 
+        classNameTextField.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        classNameTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                classNameTextFieldFocusGained(evt);
+            }
+        });
+        classNameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                classNameTextFieldKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                classNameTextFieldKeyReleased(evt);
+            }
+        });
+
+        creditsTextField.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        creditsTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                creditsTextFieldFocusGained(evt);
+            }
+        });
+        creditsTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                creditsTextFieldKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                creditsTextFieldKeyReleased(evt);
+            }
+        });
+
+        finalGradeTextField.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        finalGradeTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                finalGradeTextFieldFocusGained(evt);
+            }
+        });
+        finalGradeTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                finalGradeTextFieldKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                finalGradeTextFieldKeyReleased(evt);
+            }
+        });
+
+        semesterTextField.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         jLabel1.setText("Class name:");
 
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         jLabel2.setText("Final grade:");
 
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         jLabel3.setText("Semester:");
 
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         jLabel4.setText("Credits:");
 
+        addAClassButton.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         addAClassButton.setText("Add a Class");
         addAClassButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -105,6 +162,7 @@ public class EditingClassesForm extends javax.swing.JPanel {
             }
         });
 
+        deleteButton.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         deleteButton.setText("Delete Class");
         deleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -117,11 +175,13 @@ public class EditingClassesForm extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(130, Short.MAX_VALUE)
+                .addContainerGap(112, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(classesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(146, 146, 146))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(deleteButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(addAClassButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(134, 134, 134))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
@@ -129,24 +189,22 @@ public class EditingClassesForm extends javax.swing.JPanel {
                             .addComponent(jLabel4)
                             .addComponent(jLabel1))
                         .addGap(24, 24, 24)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(semesterTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
-                            .addComponent(classNameTextField)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(finalGradeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                            .addComponent(semesterTextField)
                             .addComponent(creditsTextField)
-                            .addComponent(finalGradeTextField))
-                        .addGap(103, 103, 103))
+                            .addComponent(classNameTextField))
+                        .addGap(45, 45, 45))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(deleteButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(addAClassButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(134, 134, 134))))
+                        .addComponent(classesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(72, 72, 72))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(22, 22, 22)
+                .addContainerGap()
                 .addComponent(classesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(classNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
@@ -180,30 +238,30 @@ public class EditingClassesForm extends javax.swing.JPanel {
             finalGradeTextField.setText("");
             semesterTextField.setText("");
             creditsTextField.setText("");
-            
+
             classNameTextField.requestFocusInWindow();
             addAClassButton.setText("Submit");
             classNameTextField.setEditable(true);
             finalGradeTextField.setEditable(true);
             semesterTextField.setEditable(true);
             creditsTextField.setEditable(true);
-            
+
         } else {
             // Try submitting to database.
             try {
                 Querying q = new Querying();
                 q.submitNewClass(classNameTextField.getText().toUpperCase(), finalGradeTextField.getText().toUpperCase(), creditsTextField.getText(), semesterTextField.getText().toUpperCase());
+                classesComboBox.addItem(classNameTextField.getText().toUpperCase());
+                classesComboBox.setSelectedIndex(classesComboBox.getItemCount() - 1);
                 JOptionPane.showMessageDialog(this,
                         "Successfully added the class.",
                         "Class Added",
                         JOptionPane.INFORMATION_MESSAGE);
-                classesComboBox.addItem(classNameTextField.getText().toUpperCase());
-                classesComboBox.setSelectedIndex(classesComboBox.getItemCount() - 1);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);  // Show the exception message.
                 classesComboBox.setSelectedIndex(0);
             }
-            
+
             classesComboBox.setVisible(true);
             deleteButton.setText("Delete Class");
             addAClassButton.setText("Add a Class");
@@ -211,7 +269,7 @@ public class EditingClassesForm extends javax.swing.JPanel {
             finalGradeTextField.setEditable(false);
             semesterTextField.setEditable(false);
             creditsTextField.setEditable(false);
-            
+
         }
     }//GEN-LAST:event_addAClassButtonActionPerformed
 
@@ -226,10 +284,10 @@ public class EditingClassesForm extends javax.swing.JPanel {
             semesterTextField.setEditable(false);
             creditsTextField.setEditable(false);
             classesComboBox.setSelectedIndex(0);
-        } else {
+        } else if (classesComboBox.getItemCount() > 0 && JOptionPane.showConfirmDialog(null, "Are you sure you would like to delete the course?", "Confirm",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             String className = classesComboBox.getSelectedItem().toString();
-            System.out.println("selected index: " + classesComboBox.getSelectedIndex());
-            
+
             try {
                 // remove it from the database
                 Querying q = new Querying();
@@ -252,10 +310,62 @@ public class EditingClassesForm extends javax.swing.JPanel {
                 semesterTextField.setText(courseInfo[2]);
                 creditsTextField.setText(courseInfo[3]);
             } catch (ClassNotFoundException ex) {
-                Logger.getLogger(EditingClassesForm.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, ex);  // Show the exception message.
+            } catch (NullPointerException npe) {
+                System.out.println("No other classes to display.");
             }
         }
     }//GEN-LAST:event_classesComboBoxActionPerformed
+
+    private void classNameTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_classNameTextFieldKeyPressed
+
+    }//GEN-LAST:event_classNameTextFieldKeyPressed
+
+    private void creditsTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_creditsTextFieldKeyPressed
+
+    }//GEN-LAST:event_creditsTextFieldKeyPressed
+
+    private void finalGradeTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_finalGradeTextFieldKeyPressed
+
+    }//GEN-LAST:event_finalGradeTextFieldKeyPressed
+
+    private void classNameTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_classNameTextFieldKeyReleased
+        // the entire name has been entered; move on to next textfield
+        if (classNameTextField.getText().toString().length() == 6) {
+            creditsTextField.requestFocusInWindow();
+        }
+    }//GEN-LAST:event_classNameTextFieldKeyReleased
+
+    private void creditsTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_creditsTextFieldKeyReleased
+        if (creditsTextField.getText().length() == 1) {
+            finalGradeTextField.requestFocusInWindow();
+        }
+    }//GEN-LAST:event_creditsTextFieldKeyReleased
+
+    private void finalGradeTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_finalGradeTextFieldKeyReleased
+        // The grade has been entered. Move on.
+        if (finalGradeTextField.getText().length() == 1) {
+            semesterTextField.requestFocusInWindow();
+        }
+    }//GEN-LAST:event_finalGradeTextFieldKeyReleased
+
+    private void classNameTextFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_classNameTextFieldFocusGained
+        if (classNameTextField.getText().length() == 6) {
+            classNameTextField.setText("");
+        }
+    }//GEN-LAST:event_classNameTextFieldFocusGained
+
+    private void creditsTextFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_creditsTextFieldFocusGained
+        if (creditsTextField.getText().length() == 1) {
+            creditsTextField.setText("");
+        }
+    }//GEN-LAST:event_creditsTextFieldFocusGained
+
+    private void finalGradeTextFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_finalGradeTextFieldFocusGained
+        if (finalGradeTextField.getText().length() == 1) {
+            finalGradeTextField.setText("");
+        }
+    }//GEN-LAST:event_finalGradeTextFieldFocusGained
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

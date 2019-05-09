@@ -3,11 +3,8 @@ package gradecalculatorv3;
 import java.awt.Color;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 public class GPACalculator extends javax.swing.JFrame {
 
@@ -31,16 +28,8 @@ public class GPACalculator extends javax.swing.JFrame {
         }
 
     }
-
-    /*
-    public double fetchCreditHours() {
-        
-    }
     
-    public double calculateGPA() {
-        
-    }
-     */
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -148,7 +137,7 @@ public class GPACalculator extends javax.swing.JFrame {
 
         addClassButton.setBackground(new java.awt.Color(51, 255, 51));
         addClassButton.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        addClassButton.setLabel("Add/Edit Classes");
+        addClassButton.setLabel("Add/View Classes");
         addClassButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addClassButtonActionPerformed(evt);
@@ -314,7 +303,7 @@ public class GPACalculator extends javax.swing.JFrame {
 
         // Show the classes editor screen.
         JFrame frame = new JFrame("Adding Classes");
-        EditingClassesForm classAdder = new EditingClassesForm(frame);
+        FinalGradesForm classAdder = new FinalGradesForm(frame);
         this.dispose();
     }//GEN-LAST:event_addClassButtonActionPerformed
 
