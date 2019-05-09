@@ -16,6 +16,16 @@
 CREATE DATABASE IF NOT EXISTS `college` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `college`;
 
+-- Dumping structure for table college.courses
+CREATE TABLE IF NOT EXISTS `courses` (
+  `className` varchar(7) NOT NULL,
+  `finalGrade` char(1) NOT NULL DEFAULT 'U',
+  `semester` varchar(11) NOT NULL,
+  `credits` int(1) NOT NULL,
+  PRIMARY KEY (`className`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Data exporting was unselected.
 -- Dumping structure for table college.grades
 CREATE TABLE IF NOT EXISTS `grades` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -25,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `grades` (
   `CLASS` varchar(6) NOT NULL,
   `SEMESTER` varchar(11) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=124 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=192 DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
