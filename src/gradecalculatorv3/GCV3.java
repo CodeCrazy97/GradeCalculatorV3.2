@@ -554,7 +554,6 @@ public class GCV3 extends javax.swing.JFrame {
         gradeTextField3.setVisible(false);
         weightTextField1.setVisible(false);
         semesterYearTextField.setVisible(false);
-        semesterYearTextField.setVisible(true);
     }//GEN-LAST:event_button3ActionPerformed
 
     //Refresh Button clicked.
