@@ -555,6 +555,7 @@ public class GCV3 extends javax.swing.JFrame {
         weightTextField1.setVisible(false);
         semesterYearTextField.setVisible(false);
         createNewClassButton.setLabel("Add A Class");
+        createNewClassButton.setSize(98, 27);
     }//GEN-LAST:event_button3ActionPerformed
 
     //Refresh Button clicked.
