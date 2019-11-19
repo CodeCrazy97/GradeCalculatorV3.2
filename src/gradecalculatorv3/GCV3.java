@@ -34,6 +34,7 @@ public class GCV3 extends javax.swing.JFrame {
         gradeTextField3.setVisible(false);
         weightTextField1.setVisible(false);
         semesterYearTextField.setVisible(false);
+        assignmentTitlesjComboBox1.setVisible(false);
 
     }
 
@@ -70,7 +71,6 @@ public class GCV3 extends javax.swing.JFrame {
         label9 = new java.awt.Label();
         addGradeButton = new java.awt.Button();
         deleteGradeByIndexButton = new java.awt.Button();
-        deleteIndexTextField = new java.awt.TextField();
         createNewClassButton = new java.awt.Button();
         classNameTextField1 = new java.awt.TextField();
         descriptionTextField2 = new java.awt.TextField();
@@ -80,6 +80,7 @@ public class GCV3 extends javax.swing.JFrame {
         semestersjComboBox1 = new javax.swing.JComboBox<>();
         label4 = new java.awt.Label();
         semesterYearTextField = new java.awt.TextField();
+        assignmentTitlesjComboBox1 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -224,17 +225,6 @@ public class GCV3 extends javax.swing.JFrame {
             }
         });
 
-        deleteIndexTextField.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        deleteIndexTextField.setText("Zero-indexed");
-        deleteIndexTextField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                deleteIndexTextFieldFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                deleteIndexTextFieldFocusLost(evt);
-            }
-        });
-
         createNewClassButton.setBackground(new java.awt.Color(204, 255, 204));
         createNewClassButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         createNewClassButton.setLabel("Add A Class");
@@ -313,6 +303,12 @@ public class GCV3 extends javax.swing.JFrame {
             }
         });
 
+        assignmentTitlesjComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                assignmentTitlesjComboBox1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -322,38 +318,36 @@ public class GCV3 extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addComponent(button4, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(69, 69, 69))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addComponent(label6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(2, 2, 2)
+                                    .addComponent(whatIfGradeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(label7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(140, 140, 140)))
                             .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                            .addComponent(button4, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(69, 69, 69))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                            .addComponent(label6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(2, 2, 2)
-                                            .addComponent(whatIfGradeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(label7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(140, 140, 140)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(label8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(2, 2, 2)
-                                                .addComponent(desiredGradeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(label9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addContainerGap(77, Short.MAX_VALUE))))
+                                        .addComponent(label8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(2, 2, 2)
+                                        .addComponent(desiredGradeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(label9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(deleteGradeByIndexButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(assignmentTitlesjComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                                        .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addContainerGap(91, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(deleteGradeByIndexButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(addGradeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(deleteIndexTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(addGradeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(112, 112, 112)
@@ -366,14 +360,25 @@ public class GCV3 extends javax.swing.JFrame {
                         .addComponent(semestersjComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
             .addGroup(layout.createSequentialGroup()
+                .addGap(147, 147, 147)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(button1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(updateDatabaseButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(semesterYearTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(193, 193, 193))
+            .addGroup(layout.createSequentialGroup()
                 .addGap(122, 122, 122)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(24, 24, 24)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pPointsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(currentGradeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(button3, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(24, 24, 24)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(pPointsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(currentGradeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -388,19 +393,6 @@ public class GCV3 extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(createNewClassButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(242, 242, 242))))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(379, 379, 379)
-                        .addComponent(button3, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(147, 147, 147)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(button1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(updateDatabaseButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(semesterYearTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(193, 193, 193))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -420,15 +412,15 @@ public class GCV3 extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
+                                        .addGap(19, 19, 19)
+                                        .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
                                         .addComponent(addGradeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(deleteGradeByIndexButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(deleteIndexTextField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(19, 19, 19)
-                                        .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(86, 86, 86)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(deleteGradeByIndexButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(assignmentTitlesjComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(whatIfGradeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(label6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -465,9 +457,9 @@ public class GCV3 extends javax.swing.JFrame {
                         .addGap(12, 12, 12)
                         .addComponent(updateDatabaseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(semesterYearTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(button3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         classesComboBox.getAccessibleContext().setAccessibleName("");
@@ -558,7 +550,7 @@ public class GCV3 extends javax.swing.JFrame {
         createNewClassButton.setSize(98, 27);
     }//GEN-LAST:event_button3ActionPerformed
 
-    //Refresh Button clicked.
+    //Refresh calculations Button clicked (does not send any data to database).
     private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
         resetData(true);
     }//GEN-LAST:event_button1ActionPerformed
@@ -566,8 +558,9 @@ public class GCV3 extends javax.swing.JFrame {
     private void resetData(boolean allowWarningMessage) {
         //New information about grades has been entered - reset data structures, but DON'T send anything to database.
         assignmentsInfo.clear();  //Get rid of old grades (descriptions, grade (decimal percent), and weight (%)).
-        boolean showWarningMessageOnlyOnce = false;
+        boolean showWarningMessage = false;
         int currentRow = 0;
+        
         //Remove blanked rows first.
         while (currentRow < gradesjTable.getRowCount()) {
             while (currentRow < gradesjTable.getRowCount() && gradesjTable.getModel().getValueAt(currentRow, 0).toString().equals("") && gradesjTable.getModel().getValueAt(currentRow, 1).toString().equals("") && gradesjTable.getModel().getValueAt(currentRow, 2).toString().equals("")) {
@@ -592,12 +585,12 @@ public class GCV3 extends javax.swing.JFrame {
                 } else { //Remove the description 
                     assignmentsInfo.removeLast();
                 }
-                showWarningMessageOnlyOnce = true;
+                showWarningMessage = true;
                 System.out.println("ERROR: " + nfe);
                 continue;
             }
         }
-        if (allowWarningMessage && showWarningMessageOnlyOnce) {
+        if (allowWarningMessage && showWarningMessage) {
             JOptionPane.showMessageDialog(this, "Something is wrong with your input.", "ENTRY ERROR", JOptionPane.WARNING_MESSAGE);
         }
         //Reset labels about percentage points and current grade in the class.
@@ -668,15 +661,15 @@ public class GCV3 extends javax.swing.JFrame {
         editor.requestFocusInWindow();
     }//GEN-LAST:event_addGradeButtonActionPerformed
 
-    private void deleteIndexTextFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_deleteIndexTextFieldFocusGained
-        //Clear the default text.
-        deleteIndexTextField.setText("");
-    }//GEN-LAST:event_deleteIndexTextFieldFocusGained
-
     private void deleteGradeByIndexButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteGradeByIndexButtonActionPerformed
         //Delete the grade that was specified.
         try {
-            model.removeRow(Integer.parseInt(deleteIndexTextField.getText()));
+            for (int i = 0; i < model.getRowCount(); i++) {
+                if (gradesjTable.getModel().getValueAt(i, 0).equals(assignmentTitlesjComboBox1.getSelectedItem())) {
+                    System.out.println("EQUALITY!!!");
+                    model.removeRow(i);
+                }
+            }
         } catch (NumberFormatException nfe) {
             JOptionPane.showMessageDialog(this, "Something is wrong with your input.", "ENTRY ERROR", JOptionPane.ERROR_MESSAGE);
         }
@@ -813,12 +806,6 @@ public class GCV3 extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_weightTextField1FocusLost
 
-    private void deleteIndexTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_deleteIndexTextFieldFocusLost
-        if (deleteIndexTextField.getText().equals("")) {
-            deleteIndexTextField.setText("Zero-indexed");
-        }
-    }//GEN-LAST:event_deleteIndexTextFieldFocusLost
-
     private void semesterYearTextFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_semesterYearTextFieldFocusGained
         if (semesterYearTextField.getText().equals("Semester + Year")) {
             semesterYearTextField.setText("");
@@ -831,6 +818,10 @@ public class GCV3 extends javax.swing.JFrame {
             semesterYearTextField.setText("Semester + Year");
         }
     }//GEN-LAST:event_semesterYearTextFieldFocusLost
+
+    private void assignmentTitlesjComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_assignmentTitlesjComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_assignmentTitlesjComboBox1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -939,6 +930,17 @@ public class GCV3 extends javax.swing.JFrame {
             model.insertRow(j, new Object[]{assignmentsInfo.get(i), 100 * Double.parseDouble(assignmentsInfo.get(i + 1)), assignmentsInfo.get(i + 2)});
         }
 
+        if (assignmentsInfo.size() > 0) {// There are assignment grades.
+            assignmentTitlesjComboBox1.setVisible(true);
+            for (int i = 0; i < assignmentsInfo.size(); i++) {
+                System.out.println(assignmentsInfo.get(i));
+            }
+            
+            LinkedList<String> assignments = database.getGradesWeightsDescriptions(className, semester);
+            for (int i = 0; i < assignmentsInfo.size(); i += 3) {
+                assignmentTitlesjComboBox1.addItem(assignmentsInfo.get(i));
+            }
+        }
         //Also, reload the ppoints label and currentGradeLabel.
         resetPPointsAndCurrentGradeLabels();
     }
@@ -1004,6 +1006,7 @@ public class GCV3 extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button addGradeButton;
+    private static javax.swing.JComboBox<String> assignmentTitlesjComboBox1;
     private java.awt.Button button1;
     private java.awt.Button button2;
     private java.awt.Button button3;
@@ -1013,7 +1016,6 @@ public class GCV3 extends javax.swing.JFrame {
     private java.awt.Button createNewClassButton;
     private static java.awt.Label currentGradeLabel;
     private java.awt.Button deleteGradeByIndexButton;
-    private java.awt.TextField deleteIndexTextField;
     private java.awt.TextField descriptionTextField2;
     private java.awt.TextField desiredGradeTextField;
     private java.awt.TextField gradeTextField3;

@@ -12,6 +12,87 @@ public class Querying {
     public String url = "jdbc:mysql://localhost:3306/college";
 
     public Querying() throws ClassNotFoundException {
+        // Check that the course table exists.
+        try {
+            Connection conn = DriverManager.getConnection(url, "root", "");
+            String sqlString = "SELECT COUNT(*) FROM courses;";
+            PreparedStatement stmt = conn.prepareStatement(sqlString);
+
+            ResultSet rs = stmt.executeQuery();
+
+            stmt.close();
+            rs.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("27 : " + e.getMessage());
+            if (e.getMessage().contains("Unknown database 'college'")) {
+                String sqlString = "CREATE DATABASE IF NOT EXISTS college; "
+                        + "  USE college; "
+                        + "  CREATE TABLE IF NOT EXISTS courses (\n"
+                        + "  className varchar(7) NOT NULL,\n"
+                        + "  finalGrade char(1) NOT NULL DEFAULT 'U',\n"
+                        + "  semester varchar(11) NOT NULL,\n"
+                        + "  credits int(1) NOT NULL,\n"
+                        + "  PRIMARY KEY (className)\n"
+                        + "); ";
+                //Now, execute the insert statement.
+                try {
+                    Connection conn = DriverManager.getConnection(url, "root", "");
+                    PreparedStatement stmt = conn.prepareStatement(sqlString);
+                    // execute the preparedstatement
+                    stmt.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Successfully created courses table.", "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
+
+                    stmt.close();
+                    conn.close();
+                } catch (Exception e2) {
+                    System.err.println("Got an exception! :(");
+                    JOptionPane.showMessageDialog(null, "Error creating courses table! " + e2.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+                    System.err.println(e.getMessage());
+                }
+            }
+        }
+
+        // Check that the grades table exists.
+        try {
+            Connection conn = DriverManager.getConnection(url, "root", "");
+            String sqlString = "SELECT COUNT(*) FROM grades;";
+            PreparedStatement stmt = conn.prepareStatement(sqlString);
+
+            ResultSet rs = stmt.executeQuery();
+
+            stmt.close();
+            rs.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            System.exit(0);
+            String sqlString = "CREATE TABLE IF NOT EXISTS grades (\n"
+                    + "  ID int(11) NOT NULL AUTO_INCREMENT,\n"
+                    + "  GRADE double NOT NULL,\n"
+                    + "  WEIGHT double NOT NULL,\n"
+                    + "  DESCRIPTION varchar(100) NOT NULL,\n"
+                    + "  CLASS varchar(6) NOT NULL,\n"
+                    + "  SEMESTER varchar(11) NOT NULL,\n"
+                    + "  PRIMARY KEY (ID)\n"
+                    + "); ";
+            //Now, execute the insert statement.
+            try {
+                Connection conn = DriverManager.getConnection(url, "root", "");
+                PreparedStatement stmt = conn.prepareStatement(sqlString);
+                // execute the preparedstatement
+                stmt.execute();
+                JOptionPane.showMessageDialog(null, "Successfully created grades table.", "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
+
+                stmt.close();
+                conn.close();
+            } catch (Exception e2) {
+                System.err.println("Got an exception!");
+                JOptionPane.showMessageDialog(null, "Error creating grades table! " + e2.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+                System.err.println(e.getMessage());
+            }
+        }
+
         Class.forName("com.mysql.jdbc.Driver");
     }
 

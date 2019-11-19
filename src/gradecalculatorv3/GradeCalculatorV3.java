@@ -30,16 +30,20 @@ public class GradeCalculatorV3 {
     public static void main(String[] args) throws ClassNotFoundException, IOException, InterruptedException {
         //Remove aria_log.* file (this file causes mysqld startup to fail).
         //Runtime.getRuntime().exec("cmd /c start \"\" \"C:\\Users\\Ethan\\Documents\\Projects\\Batch\\remove_aria_log_file.bat\"");
-        
+
         boolean result = GradeCalculatorV3.isRunning("mysqld.exe");
         if (!result) {
             Runtime.getRuntime().exec("C:\\xampp\\mysql\\bin\\mysqld.exe", null, new File("C:\\xampp\\mysql\\bin"));
             //Force the program to wait for mysql to start.
             Thread.sleep(9500);
         }
+        /*
         String[] arguments = {};
         GCV3 gcv3 = new GCV3();
         gcv3.main(arguments);
+         */
+        GCV4 gcv4 = new GCV4();
+        gcv4.main(args);
     }
 
     public static void msgBox(String msg) {
