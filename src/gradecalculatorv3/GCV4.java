@@ -5,6 +5,7 @@
  */
 package gradecalculatorv3;
 
+import java.awt.List;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -14,6 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +30,12 @@ public class GCV4 extends javax.swing.JFrame {
      */
     public GCV4() {
         initComponents();
+
+        ArrayList<String> semesters = getSemesters();
+        System.out.println("size  = " + semesters.size());
+        for (int i = 0; i < semesters.size(); i++) {
+            semestersComboBox.addItem(semesters.get(i));
+        }
 
         titleList.add("Assignment 5");
         weightList.add("10.5");
@@ -45,19 +53,64 @@ public class GCV4 extends javax.swing.JFrame {
 
     }
 
+    // Get all semesters that have assignment grades.
+    public ArrayList<String> getSemesters() {
+        String sql = "SELECT semester_taken, year_taken FROM course WHERE id IN (SELECT course_id FROM assignment);";
+        ArrayList<String> semesters = new ArrayList<String>();
+        try (Connection conn = connectToCollege();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+
+            // loop through the result set
+            while (rs.next()) {
+                String semester = rs.getString(1) + " " + rs.getString(2);
+                semesters.add(semester);
+                System.out.println("semeseter  = " + semester);
+            }
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return semesters;
+    }
+
     public static String getAbsolutePath() {
         return (new File("").getAbsolutePath() + "/college.db").replace("\\", "/");
     }
 
-    public static void insert(String title, double credits) {
+    public static void addAssignment(int id, String title, double weight, double grade, int courseID) {
         // SQLite connection string
         String url = "jdbc:sqlite:" + getAbsolutePath();
 
-        String sql = "INSERT INTO course(id, title, credits, semester_taken, year_taken, final_grade) VALUES(1, ?, ?, 'fall', 2017, 'A')";
+        String sql = "INSERT INTO assignment(id, title, weight, grade, course_id) VALUES(?, ?, ?, ?, ?)";
 
         try (Connection conn = connectToCollege(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
-            pstmt.setString(1, title);
-            pstmt.setDouble(2, credits);
+            pstmt.setInt(1, id);
+            pstmt.setString(2, title);
+            pstmt.setDouble(3, weight);
+            pstmt.setDouble(4, grade);
+            pstmt.setInt(5, courseID);
+            pstmt.executeUpdate();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    public static void addCourse(int id, String title, double credits, String semesterTaken, int yearTaken, char finalGrade) {
+        semesterTaken = semesterTaken.toUpperCase();
+
+        String url = "jdbc:sqlite:" + getAbsolutePath();
+
+        String sql = "INSERT INTO course(id, title, credits, semester_taken, year_taken, final_grade) VALUES(?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = connectToCollege(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
+            pstmt.setInt(1, id);
+            pstmt.setString(2, title);
+            pstmt.setDouble(3, credits);
+            pstmt.setString(4, semesterTaken);
+            pstmt.setInt(5, yearTaken);
+            pstmt.setString(6, "" + finalGrade);
             pstmt.executeUpdate();
             conn.close();
         } catch (SQLException e) {
@@ -80,7 +133,8 @@ public class GCV4 extends javax.swing.JFrame {
     }
 
     public static void selectAll() {
-        String sql = "SELECT id, title, credits FROM course;";
+        System.out.println("\n\nCourses:");
+        String sql = "SELECT id, title, credits, semester_taken, year_taken FROM course;";
 
         try (Connection conn = connectToCollege();
                 Statement stmt = conn.createStatement();
@@ -88,10 +142,77 @@ public class GCV4 extends javax.swing.JFrame {
 
             // loop through the result set
             while (rs.next()) {
-                System.out.println(rs.getInt("id"));
-                System.out.println(rs.getString("title"));
+                System.out.println("ID: " + rs.getInt("id") + ", TITLE: " + rs.getString("title") + ", SEMESTER TAKEN: " + rs.getString(4) + ", YEAR TAKEN: " + rs.getString(5));
             }
             conn.close();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        System.out.println("\n\nGrades:");
+        sql = "SELECT id, title, course_id FROM assignment;";
+        // select assignments
+        try (Connection conn = connectToCollege();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+
+            // loop through the result set
+            while (rs.next()) {
+                System.out.println("ID : " + rs.getInt("id") + ", TITLE: " + rs.getString("title") + ", COURSE ID: " + rs.getInt("course_id"));
+            }
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    public static void deleteFromTables() {
+        // SQLite connection string
+        String url = "jdbc:sqlite:" + getAbsolutePath();
+
+        // SQL statement for creating a new table
+        String sql = "DELETE FROM assignment";
+
+        try (Connection conn = DriverManager.getConnection(url);
+                Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate(sql);
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // SQL statement for creating a new table
+        sql = "DELETE FROM course";
+
+        try (Connection conn = DriverManager.getConnection(url);
+                Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate(sql);
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void dropTables() {
+        // SQLite connection string
+        String url = "jdbc:sqlite:" + getAbsolutePath();
+
+        // SQL statement for creating a new table
+        String sql = "DROP TABLE assignment;";
+
+        try (Connection conn = DriverManager.getConnection(url);
+                Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // SQL statement for creating a new table
+        sql = "DROP TABLE course;";
+
+        try (Connection conn = DriverManager.getConnection(url);
+                Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -368,6 +489,12 @@ public class GCV4 extends javax.swing.JFrame {
         jLabel5.setText("Courses:");
 
         jLabel4.setText("Semesters:");
+
+        semestersComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                semestersComboBoxItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout coursesjPanel1Layout = new javax.swing.GroupLayout(coursesjPanel1);
         coursesjPanel1.setLayout(coursesjPanel1Layout);
@@ -704,6 +831,35 @@ public class GCV4 extends javax.swing.JFrame {
         calculatePercentageComplete();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void semestersComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_semestersComboBoxItemStateChanged
+        coursesComboBox.removeAllItems();
+        String wholeSemester = semestersComboBox.getSelectedItem().toString();
+        String semester = wholeSemester.substring(0, wholeSemester.indexOf(" "));
+        int year = Integer.parseInt(wholeSemester.substring(wholeSemester.indexOf(" ") + 1));
+        
+        ArrayList<String> courses = getCoursesBySemester(semester, year);
+        for (int i = 0; i < courses.size(); i++) {
+            coursesComboBox.addItem(courses.get(i));
+        }
+    }//GEN-LAST:event_semestersComboBoxItemStateChanged
+
+    private static ArrayList<String> getCoursesBySemester(String semester, int year) {
+        String sql = "SELECT title FROM course WHERE semester_taken = '" + semester + "' AND year_taken = " + year + ";";
+        ArrayList<String> courses = new ArrayList<String>();
+        try (Connection conn = connectToCollege();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                courses.add(rs.getString(1));
+            }
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return courses;
+    }
+
     private void calculateOverallGrade() {
         double sum = 0.0;
         for (int i = 0; i < weightList.getItemCount(); i++) {
@@ -767,11 +923,30 @@ public class GCV4 extends javax.swing.JFrame {
             }
         });
 
+        /*
+        addCourse("CSC360", 3.0, "Spring", 2018, 'B');
+        addCourse("CSC190", 3.0, "Fall", 2016, 'B');
+        addAssignment("Test 1", 15, 85.6, 0);
+        addAssignment("Quiz 1", 5, 80, 1);
+         
+        dropTables();
+        createCourseTable();
+        createAssignmentTable();
+
+        deleteFromTables();
+        addCourse(1, "CSC360", 3.0, "Spring", 2018, 'B');
+        addCourse(2, "CSC190", 3.0, "Fall", 2016, 'B');
+        addAssignment(1, "Test 1", 15, 85.6, 1);
+        addAssignment(2, "Quiz 1", 5, 80, 2);
+         */
+        selectAll();
+        /*
         createNewDatabase();
         createCourseTable();
         createAssignmentTable();
         insert("CSC191", 3.0);
         selectAll();
+         */
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
