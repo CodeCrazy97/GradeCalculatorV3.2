@@ -18,6 +18,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -32,30 +34,40 @@ public class GCV4 extends javax.swing.JFrame {
         initComponents();
 
         ArrayList<String> semesters = getSemesters();
-        System.out.println("size  = " + semesters.size());
-        for (int i = 0; i < semesters.size(); i++) {
-            semestersComboBox.addItem(semesters.get(i));
+        if (semesters.size() == 0) {
+            coursesjPanel1.setVisible(false);
+            jButton3.setVisible(false);
+        } else {  // There were semesters.
+            for (int i = 0; i < semesters.size(); i++) {
+                semestersComboBox.addItem(semesters.get(i));
+            }
         }
 
+        /*
         titleList.add("Assignment 5");
         weightList.add("10.5");
         scoreList.add("98.3");
         titleList.add("Test 1");
         weightList.add("25");
         scoreList.add("68");
-
+         */
         calculateOverallGrade();
         calculateOverallPercentagePoints();
         calculatePercentageComplete();
 
         newClassjPanel2.setVisible(false);
         infojLabel1.setVisible(false);
+        editGradejPanel1.setVisible(false);
+        assignmentTitleTextField.setVisible(false);
+        weightTextField.setVisible(false);
+        scoreTextField.setVisible(false);
+        submitChangesToDBjButton2.setVisible(false);
 
     }
 
     // Get all semesters that have assignment grades.
     public ArrayList<String> getSemesters() {
-        String sql = "SELECT semester_taken, year_taken FROM course WHERE id IN (SELECT course_id FROM assignment);";
+        String sql = "SELECT semester_taken, year_taken FROM course GROUP BY semester_taken, year_taken ORDER BY year_taken DESC;";
         ArrayList<String> semesters = new ArrayList<String>();
         try (Connection conn = connectToCollege();
                 Statement stmt = conn.createStatement();
@@ -65,7 +77,6 @@ public class GCV4 extends javax.swing.JFrame {
             while (rs.next()) {
                 String semester = rs.getString(1) + " " + rs.getString(2);
                 semesters.add(semester);
-                System.out.println("semeseter  = " + semester);
             }
             conn.close();
         } catch (SQLException e) {
@@ -78,18 +89,18 @@ public class GCV4 extends javax.swing.JFrame {
         return (new File("").getAbsolutePath() + "/college.db").replace("\\", "/");
     }
 
-    public static void addAssignment(int id, String title, double weight, double grade, int courseID) {
+    public static void addAssignment(String title, double weight, double grade, int courseID) {
         // SQLite connection string
         String url = "jdbc:sqlite:" + getAbsolutePath();
 
-        String sql = "INSERT INTO assignment(id, title, weight, grade, course_id) VALUES(?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO assignment(title, weight, grade, course_id) VALUES(?, ?, ?, ?)";
 
         try (Connection conn = connectToCollege(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
-            pstmt.setInt(1, id);
-            pstmt.setString(2, title);
-            pstmt.setDouble(3, weight);
-            pstmt.setDouble(4, grade);
-            pstmt.setInt(5, courseID);
+            // pstmt.setInt(1, id);
+            pstmt.setString(1, title);
+            pstmt.setDouble(2, weight);
+            pstmt.setDouble(3, grade);
+            pstmt.setInt(4, courseID);
             pstmt.executeUpdate();
             conn.close();
         } catch (SQLException e) {
@@ -97,24 +108,24 @@ public class GCV4 extends javax.swing.JFrame {
         }
     }
 
-    public static void addCourse(int id, String title, double credits, String semesterTaken, int yearTaken, char finalGrade) {
+    public static void addCourse(String title, double credits, String semesterTaken, int yearTaken, String finalGrade) throws SQLException {
         semesterTaken = semesterTaken.toUpperCase();
+        title = title.toUpperCase();
 
         String url = "jdbc:sqlite:" + getAbsolutePath();
 
-        String sql = "INSERT INTO course(id, title, credits, semester_taken, year_taken, final_grade) VALUES(?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO course(title, credits, semester_taken, year_taken, final_grade) VALUES(?, ?, ?, ?, ?);";
 
         try (Connection conn = connectToCollege(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
-            pstmt.setInt(1, id);
-            pstmt.setString(2, title);
-            pstmt.setDouble(3, credits);
-            pstmt.setString(4, semesterTaken);
-            pstmt.setInt(5, yearTaken);
-            pstmt.setString(6, "" + finalGrade);
+            //pstmt.setInt(1, id);
+            pstmt.setString(1, title);
+            pstmt.setDouble(2, credits);
+            pstmt.setString(3, semesterTaken);
+            pstmt.setInt(4, yearTaken);
+            pstmt.setString(5, finalGrade);
+            System.out.println("\n\ntitle = " + title + ", semester taken = " + semesterTaken + ", year taken = " + yearTaken);
             pstmt.executeUpdate();
             conn.close();
-        } catch (SQLException e) {
-            System.out.println(e);
         }
     }
 
@@ -224,7 +235,7 @@ public class GCV4 extends javax.swing.JFrame {
 
         // SQL statement for creating a new table
         String sql = "CREATE TABLE IF NOT EXISTS course(\n"
-                + "	id INT PRIMARY KEY,\n"
+                + "	id INTEGER PRIMARY KEY,\n"
                 + "	title CHAR(7) NOT NULL,\n"
                 + "	credits DOUBLE NOT NULL,\n"
                 + "	semester_taken CHAR(12) NOT NULL,\n"
@@ -247,7 +258,7 @@ public class GCV4 extends javax.swing.JFrame {
 
         // SQL statement for creating a new table
         String sql = "CREATE TABLE IF NOT EXISTS assignment(\n"
-                + "	id INT PRIMARY KEY,\n"
+                + "	id INTEGER PRIMARY KEY,\n"
                 + "	title CHAR(50),\n"
                 + "	weight DOUBLE NOT NULL,\n"
                 + "	grade DOUBLE NOT NULL,\n"
@@ -276,7 +287,6 @@ public class GCV4 extends javax.swing.JFrame {
     }
 
     public static void createNewDatabase() {
-        System.out.println(getAbsolutePath());
         String url = "jdbc:sqlite:" + getAbsolutePath();
         try (Connection conn = DriverManager.getConnection(url)) {
             if (conn != null) {
@@ -304,10 +314,17 @@ public class GCV4 extends javax.swing.JFrame {
         weightList = new java.awt.List();
         percentCompleteLabel = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        submitChangesToDBjButton2 = new javax.swing.JButton();
+        editGradejPanel1 = new javax.swing.JPanel();
         assignmentTitlejTextField1 = new javax.swing.JTextField();
         weightjTextField2 = new javax.swing.JTextField();
         scoreReceivedjTextField3 = new javax.swing.JTextField();
+        addChangesjButton5 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        desiredGradejTextField1 = new javax.swing.JTextField();
+        assumedGradejTextField2 = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
         newClassjPanel2 = new javax.swing.JPanel();
         classNamejTextField1 = new javax.swing.JTextField();
@@ -324,6 +341,7 @@ public class GCV4 extends javax.swing.JFrame {
         weightTextField = new javax.swing.JTextField();
         scoreTextField = new javax.swing.JTextField();
         infojLabel1 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -368,7 +386,63 @@ public class GCV4 extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Submit Changes");
+        submitChangesToDBjButton2.setText("Submit Changes to Database");
+        submitChangesToDBjButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submitChangesToDBjButton2ActionPerformed(evt);
+            }
+        });
+
+        assignmentTitlejTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                assignmentTitlejTextField1KeyReleased(evt);
+            }
+        });
+
+        addChangesjButton5.setText("Submit");
+        addChangesjButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addChangesjButton5ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout editGradejPanel1Layout = new javax.swing.GroupLayout(editGradejPanel1);
+        editGradejPanel1.setLayout(editGradejPanel1Layout);
+        editGradejPanel1Layout.setHorizontalGroup(
+            editGradejPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(editGradejPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(assignmentTitlejTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(weightjTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scoreReceivedjTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(addChangesjButton5)
+                .addContainerGap(38, Short.MAX_VALUE))
+        );
+        editGradejPanel1Layout.setVerticalGroup(
+            editGradejPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(editGradejPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(editGradejPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(assignmentTitlejTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(weightjTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scoreReceivedjTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addChangesjButton5))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jButton5.setText("Calculate");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Grade I would like in this course:");
+
+        jLabel2.setText("What if I make this grade on remaining asignments?");
 
         javax.swing.GroupLayout gradesjPanel1Layout = new javax.swing.GroupLayout(gradesjPanel1);
         gradesjPanel1.setLayout(gradesjPanel1Layout);
@@ -378,15 +452,11 @@ public class GCV4 extends javax.swing.JFrame {
                 .addGap(35, 35, 35)
                 .addGroup(gradesjPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(gradesjPanel1Layout.createSequentialGroup()
-                        .addComponent(assignmentTitlejTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(weightjTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(scoreReceivedjTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(gradesjPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(percentCompleteLabel)
-                        .addComponent(percentagePointsLabel)
-                        .addComponent(currentGradeLabel))
+                        .addGroup(gradesjPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(percentCompleteLabel)
+                            .addComponent(percentagePointsLabel)
+                            .addComponent(currentGradeLabel))
+                        .addContainerGap())
                     .addGroup(gradesjPanel1Layout.createSequentialGroup()
                         .addComponent(titleList, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(1, 1, 1)
@@ -394,10 +464,31 @@ public class GCV4 extends javax.swing.JFrame {
                         .addGap(1, 1, 1)
                         .addComponent(scoreList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(gradesjPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(174, Short.MAX_VALUE))
+                        .addGroup(gradesjPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(gradesjPanel1Layout.createSequentialGroup()
+                                .addGroup(gradesjPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(submitChangesToDBjButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gradesjPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(gradesjPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gradesjPanel1Layout.createSequentialGroup()
+                                        .addComponent(jButton5)
+                                        .addGap(52, 52, 52))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gradesjPanel1Layout.createSequentialGroup()
+                                        .addGroup(gradesjPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel1)
+                                            .addComponent(jLabel2))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(gradesjPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(assumedGradejTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+                                            .addComponent(desiredGradejTextField1))
+                                        .addGap(30, 30, 30))))))))
+            .addGroup(gradesjPanel1Layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(editGradejPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(165, 165, 165))
         );
         gradesjPanel1Layout.setVerticalGroup(
             gradesjPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -410,13 +501,20 @@ public class GCV4 extends javax.swing.JFrame {
                     .addGroup(gradesjPanel1Layout.createSequentialGroup()
                         .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)))
+                        .addComponent(submitChangesToDBjButton2)
+                        .addGap(21, 21, 21)
+                        .addGroup(gradesjPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(desiredGradejTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addGap(9, 9, 9)
+                        .addGroup(gradesjPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(assumedGradejTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton5)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(gradesjPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(assignmentTitlejTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(weightjTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(scoreReceivedjTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(47, 47, 47)
+                .addComponent(editGradejPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addComponent(currentGradeLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(percentagePointsLabel)
@@ -485,6 +583,12 @@ public class GCV4 extends javax.swing.JFrame {
                 .addComponent(semesterTakenjTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        coursesComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                coursesComboBoxItemStateChanged(evt);
+            }
+        });
 
         jLabel5.setText("Courses:");
 
@@ -578,22 +682,25 @@ public class GCV4 extends javax.swing.JFrame {
         infojLabel1.setFont(new java.awt.Font("Tahoma", 2, 16)); // NOI18N
         infojLabel1.setText("Enter information for a new grade in above text fields");
 
+        jButton2.setText("GPA Calculator");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(25, Short.MAX_VALUE)
+                .addContainerGap(23, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(newClassjPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(coursesjPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(gradesjPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(358, 358, 358))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(34, 34, 34)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -608,11 +715,20 @@ public class GCV4 extends javax.swing.JFrame {
                                 .addGap(348, 348, 348))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(47, 47, 47)
-                                .addComponent(infojLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addContainerGap())))
+                                .addComponent(infojLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 874, Short.MAX_VALUE)))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(gradesjPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(layout.createSequentialGroup()
-                .addGap(99, 99, 99)
-                .addComponent(canceljButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 772, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(99, 99, 99)
+                        .addComponent(canceljButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 772, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(442, 442, 442)
+                        .addComponent(jButton2)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -636,9 +752,11 @@ public class GCV4 extends javax.swing.JFrame {
                             .addComponent(scoreTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(infojLabel1)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addComponent(canceljButton5)
-                .addGap(75, 75, 75))
+                .addGap(18, 18, 18)
+                .addComponent(jButton2)
+                .addGap(34, 34, 34))
         );
 
         pack();
@@ -653,8 +771,42 @@ public class GCV4 extends javax.swing.JFrame {
             newClassjPanel2.setVisible(true);
             jButton4.setText("Add");
         } else {
-            newClassjPanel2.setVisible(false);
-            jButton4.setText("Add Class");
+            if (semesterTakenjTextField1.getText().contains(" ") || semesterTakenjTextField1.getText().contains("-") ) {
+                JOptionPane.showMessageDialog(null, "Incorrect input! Semester taken cannot contain spaces, dashes, or hyphens.\nAcceptable semester examples: summer, FALL, Winter, fall_term_a", "Error!", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            try {
+                Integer.parseInt(yearTakenjTextField1.getText());
+
+                // Now try inserting into the database.
+                try {
+                    addCourse(classNamejTextField1.getText(), 3.0, semesterTakenjTextField1.getText(), Integer.parseInt(yearTakenjTextField1.getText()), "");
+
+                    newClassjPanel2.setVisible(false);
+                    jButton4.setText("Add Class");
+
+                    coursesjPanel1.setVisible(true);
+                    jButton3.setVisible(true);
+
+                    // Place the semester taken in the combo box, if it isn't already there.
+                    semestersComboBox.removeAllItems();
+                    titleList.removeAll();
+                    weightList.removeAll();
+                    scoreList.removeAll();
+
+                    ArrayList<String> semesters = getSemesters();
+                    for (int i = 0; i < semesters.size(); i++) {
+                        semestersComboBox.addItem(semesters.get(i));
+                    }
+
+                    jButton4.setText("Add a Class");
+                    JOptionPane.showMessageDialog(null, "Course added successfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
+                } catch (SQLException e) {
+                    JOptionPane.showMessageDialog(null, "Error adding course: " + e, "Error!", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (NumberFormatException nfe) {
+                JOptionPane.showMessageDialog(null, "Incorrect input! Year taken must be an integer.", "Error!", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -700,11 +852,22 @@ public class GCV4 extends javax.swing.JFrame {
         yearTakenjTextField1.setText("Year Taken (4 digits)");
         semesterTakenjTextField1.setText("Semester Taken");
         jButton4.setText("Add a Class");
+        assignmentTitleTextField.setVisible(false);
+        weightTextField.setVisible(false);
+        scoreTextField.setVisible(false);
         assignmentTitleTextField.setText("Assignment Title");
         weightTextField.setText("Weight (%)");
         scoreTextField.setText("Score (%)");
         infojLabel1.setVisible(false);
         jButton3.setText("Add a New Grade");
+
+        assumedGradejTextField2.setText("");
+        desiredGradejTextField1.setText("");
+
+        assignmentTitlejTextField1.setText("");
+        weightjTextField2.setText("");
+        scoreReceivedjTextField3.setText("");
+        editGradejPanel1.setVisible(false);
 
         weightList.select(-1);
         scoreList.select(-1);
@@ -715,7 +878,6 @@ public class GCV4 extends javax.swing.JFrame {
     }//GEN-LAST:event_assignmentTitleTextFieldKeyPressed
 
     private void assignmentTitleTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_assignmentTitleTextFieldKeyReleased
-        System.out.println(titleList.getSelectedIndex());
         if (titleList.getSelectedIndex() == -1) {
             jButton3.setVisible(true);
         }
@@ -727,19 +889,34 @@ public class GCV4 extends javax.swing.JFrame {
             scoreList.select(-1);
             titleList.select(-1);
 
+            assignmentTitleTextField.setVisible(true);
+            weightTextField.setVisible(true);
+            scoreTextField.setVisible(true);
+
             jButton3.setText("Add");
             assignmentTitleTextField.setText("Assignment Title");
             weightTextField.setText("Weight (%)");
             scoreTextField.setText("Score (%)");
             infojLabel1.setVisible(true);
-        } else {
+
+        } else if (gradeTitleDoesNotExist(assignmentTitleTextField.getText()) && stringIsANumber(weightTextField.getText()) && stringIsANumber(scoreTextField.getText())) {
             jButton3.setText("Add a New Grade");
             infojLabel1.setVisible(false);
+            assignmentTitleTextField.setVisible(false);
+            weightTextField.setVisible(false);
+            scoreTextField.setVisible(false);
+
+            titleList.add(assignmentTitleTextField.getText());
+            weightList.add(weightTextField.getText());
+            scoreList.add(scoreTextField.getText());
 
             // Recalculate percentage points, overall grade, and percent complete.
             calculateOverallGrade();
             calculateOverallPercentagePoints();
             calculatePercentageComplete();
+            submitChangesToDBjButton2.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "Incorrect input! Weight, grade must be doubles. Title cannot already exist for some other assignment.", "Error!", JOptionPane.ERROR_MESSAGE);
         }
 
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -785,6 +962,7 @@ public class GCV4 extends javax.swing.JFrame {
 
     private void titleListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_titleListMouseClicked
         if (titleList.getSelectedIndex() != -1) {
+            editGradejPanel1.setVisible(true);
             weightList.select(titleList.getSelectedIndex());
             scoreList.select(titleList.getSelectedIndex());
             weightjTextField2.setText(weightList.getSelectedItem());
@@ -795,6 +973,7 @@ public class GCV4 extends javax.swing.JFrame {
 
     private void weightListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_weightListMouseClicked
         if (weightList.getSelectedIndex() != -1) {
+            editGradejPanel1.setVisible(true);
             titleList.select(weightList.getSelectedIndex());
             scoreList.select(weightList.getSelectedIndex());
             weightjTextField2.setText(weightList.getSelectedItem());
@@ -805,6 +984,7 @@ public class GCV4 extends javax.swing.JFrame {
 
     private void scoreListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_scoreListMouseClicked
         if (scoreList.getSelectedIndex() != -1) {
+            editGradejPanel1.setVisible(true);
             titleList.select(scoreList.getSelectedIndex());
             weightList.select(scoreList.getSelectedIndex());
             weightjTextField2.setText(weightList.getSelectedItem());
@@ -816,6 +996,7 @@ public class GCV4 extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (titleList.getSelectedIndex() != -1) {
             if (titleList.getItem(titleList.getSelectedIndex()).equals(assignmentTitlejTextField1.getText())) {
+                editGradejPanel1.setVisible(false);
                 weightjTextField2.setText("");
                 assignmentTitlejTextField1.setText("");
                 scoreReceivedjTextField3.setText("");
@@ -823,6 +1004,7 @@ public class GCV4 extends javax.swing.JFrame {
             titleList.remove(titleList.getSelectedIndex());
             weightList.remove(weightList.getSelectedIndex());
             scoreList.remove(scoreList.getSelectedIndex());
+            submitChangesToDBjButton2.setVisible(true);
         }
 
         // Recalculate percentage points, overall grade, and percent complete.
@@ -832,14 +1014,18 @@ public class GCV4 extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void semestersComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_semestersComboBoxItemStateChanged
-        coursesComboBox.removeAllItems();
-        String wholeSemester = semestersComboBox.getSelectedItem().toString();
-        String semester = wholeSemester.substring(0, wholeSemester.indexOf(" "));
-        int year = Integer.parseInt(wholeSemester.substring(wholeSemester.indexOf(" ") + 1));
-        
-        ArrayList<String> courses = getCoursesBySemester(semester, year);
-        for (int i = 0; i < courses.size(); i++) {
-            coursesComboBox.addItem(courses.get(i));
+        try {
+            coursesComboBox.removeAllItems();
+            String wholeSemester = semestersComboBox.getSelectedItem().toString();
+            String semester = wholeSemester.substring(0, wholeSemester.indexOf(" "));
+            int year = Integer.parseInt(wholeSemester.substring(wholeSemester.indexOf(" ") + 1));
+
+            ArrayList<String> courses = getCoursesBySemester(semester, year);
+            for (int i = 0; i < courses.size(); i++) {
+                coursesComboBox.addItem(courses.get(i));
+            }
+        } catch (NullPointerException npe) {
+            // Do nothing - exception likely caused by nothing being in the combo box.            
         }
     }//GEN-LAST:event_semestersComboBoxItemStateChanged
 
@@ -855,12 +1041,171 @@ public class GCV4 extends javax.swing.JFrame {
             }
             conn.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            JOptionPane.showMessageDialog(null, "Error trying to fetch semesters from the database.", "Error!", JOptionPane.ERROR_MESSAGE);
         }
         return courses;
     }
 
-    private void calculateOverallGrade() {
+    private void assignmentTitlejTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_assignmentTitlejTextField1KeyReleased
+
+    }//GEN-LAST:event_assignmentTitlejTextField1KeyReleased
+
+    private void addChangesjButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addChangesjButton5ActionPerformed
+        if (stringIsANumber(weightjTextField2.getText()) && stringIsANumber(scoreReceivedjTextField3.getText()) && gradeTitleDoesNotExist(assignmentTitlejTextField1.getText()) && !assignmentTitlejTextField1.getText().equals("") && !weightjTextField2.getText().equals("") && !scoreReceivedjTextField3.getText().equals("")) {
+            // First, delete whatever is being edited.
+            titleList.remove(titleList.getSelectedIndex());
+            weightList.remove(weightList.getSelectedIndex());
+            scoreList.remove(scoreList.getSelectedIndex());
+
+            titleList.add(assignmentTitlejTextField1.getText());
+            weightList.add(weightjTextField2.getText());
+            scoreList.add(scoreReceivedjTextField3.getText());
+
+            assignmentTitlejTextField1.setText("");
+            weightjTextField2.setText("");
+            scoreReceivedjTextField3.setText("");
+            editGradejPanel1.setVisible(false);
+            submitChangesToDBjButton2.setVisible(true);
+
+            // Recalculate grade info.
+            calculateOverallGrade();
+            calculateOverallPercentagePoints();
+            calculatePercentageComplete();
+        }
+    }//GEN-LAST:event_addChangesjButton5ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        if ((stringIsANumber(desiredGradejTextField1.getText()) || desiredGradejTextField1.getText().equals("")) && (stringIsANumber(assumedGradejTextField2.getText()) || assumedGradejTextField2.getText().equals(""))) {
+            String necessaryScoreMessage = "";
+            if (!desiredGradejTextField1.getText().equals("")) {
+                double necessaryScore = (Double.parseDouble(desiredGradejTextField1.getText()) / 100.0 - calculateOverallPercentagePoints() / 100.0) / (1.00 - calculatePercentageComplete() / 100.0);
+                necessaryScore = ((int) (necessaryScore * 1000.0) / 10.0);
+                necessaryScoreMessage = "In order to get " + desiredGradejTextField1.getText() + "% overall in the course, you will need " + necessaryScore + "% on remaining assignments.";
+            }
+
+            String finalGradeMessage = "";
+            if (!assumedGradejTextField2.getText().equals("")) {
+                // Now calculate what grade the user will have overall, assuming he/she makes a specified score on remaining assignments.
+                double finalGrade = (Double.parseDouble(assumedGradejTextField2.getText())) / 100.0 * (1.0 - calculatePercentageComplete() / 100.0) + calculateOverallPercentagePoints() / 100.0;
+                finalGrade = ((int) (finalGrade * 1000.0)) / 10.0;
+                finalGradeMessage = "If you make " + assumedGradejTextField2.getText() + "% on remaining coursework, you will have " + finalGrade + "% overall.";
+            }
+            if (!necessaryScoreMessage.equals("") || !finalGradeMessage.equals("")) {
+                JOptionPane.showMessageDialog(null, necessaryScoreMessage + "\n" + finalGradeMessage, "Results", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Incorrect input. Must be doubles.", "Error!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        GPACalculator gpacalc = new GPACalculator();
+        String[] arguments = {};
+        gpacalc.main(arguments);
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void coursesComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_coursesComboBoxItemStateChanged
+        // Fetch all the grades for the selected course.
+        try {
+            // reset any grade data that was in the editing textfields.
+            assignmentTitlejTextField1.setText("");
+            weightjTextField2.setText("");
+            scoreReceivedjTextField3.setText("");
+            editGradejPanel1.setVisible(false);
+            submitChangesToDBjButton2.setVisible(true);
+
+            // Every course is a unique combination of its title, semester_taken, and year_taken.
+            String title = coursesComboBox.getSelectedItem().toString();
+            String wholeSemester = semestersComboBox.getSelectedItem().toString();
+            String semesterTaken = wholeSemester.substring(0, wholeSemester.indexOf(" "));
+            int yearTaken = Integer.parseInt(wholeSemester.substring(wholeSemester.indexOf(" ") + 1));
+
+            String sql = "SELECT title, weight, grade FROM assignment WHERE course_id = (SELECT id FROM course WHERE title = '" + title + "' AND semester_taken = '" + semesterTaken + "' AND year_taken = " + yearTaken + ");";
+            ArrayList<String> courses = new ArrayList<String>();
+            try (Connection conn = connectToCollege();
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery(sql)) {
+
+                // First, clear the lists from any previous grades in them.
+                titleList.removeAll();
+                weightList.removeAll();
+                scoreList.removeAll();
+
+                while (rs.next()) {
+                    titleList.add(rs.getString(1));
+                    weightList.add(rs.getString(2));
+                    scoreList.add(rs.getString(3));
+                }
+
+                // Recalculate grade info.
+                calculateOverallGrade();
+                calculateOverallPercentagePoints();
+                calculatePercentageComplete();
+
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        } catch (NullPointerException e) {
+            System.out.println("NullPointerException: " + e);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "There was an error trying to fetch grades for the course: " + e, "Error!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_coursesComboBoxItemStateChanged
+
+    private void submitChangesToDBjButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitChangesToDBjButton2ActionPerformed
+        try {
+            // First, try deleting all info already in the database.
+            String courseTitle = coursesComboBox.getSelectedItem().toString();
+            String wholeSemester = semestersComboBox.getSelectedItem().toString();
+            String semester = wholeSemester.substring(0, wholeSemester.indexOf(" "));
+            int year = Integer.parseInt(wholeSemester.substring(wholeSemester.indexOf(" ") + 1));
+            deleteFromAssignmentTableForClass(courseTitle, semester, year);
+
+            // Then, try inserting everything that's already in the jlists.
+            int courseID = getCourseID(courseTitle, semester, year);
+            for (int i = 0; i < titleList.getItemCount(); i++) {
+                addAssignment(titleList.getItem(i), Double.parseDouble(weightList.getItem(i)), Double.parseDouble(scoreList.getItem(i)), courseID);
+            }
+            JOptionPane.showMessageDialog(null, "Database was successfully updated.", "Success!", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "There was an error trying to delete/add grades: " + e, "Error!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_submitChangesToDBjButton2ActionPerformed
+
+    private int getCourseID(String title, String semester, int year) {
+        String sql = "SELECT id FROM course WHERE title = '" + title + "' AND semester_taken = '" + semester + "' AND year_taken = " + year + ";";
+        try (Connection conn = connectToCollege();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+
+            // loop through the result set
+            while (rs.next()) {
+                return rs.getInt(1);
+            }
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        JOptionPane.showMessageDialog(null, "There was an error trying to find the course id for course with title = " + title + ", semester taken = " + semester + ", and year taken = " + year, "Error!", JOptionPane.ERROR_MESSAGE);
+        throw new Error("Could not find course id!");
+    }
+
+    private void deleteFromAssignmentTableForClass(String courseTitle, String semester, int year) {
+        String url = "jdbc:sqlite:" + getAbsolutePath();
+
+        String sql = "DELETE FROM assignment WHERE course_id = " + getCourseID(courseTitle, semester, year) + ";";
+
+        try (Connection conn = connectToCollege(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
+            pstmt.executeUpdate();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    private double calculateOverallGrade() {
         double sum = 0.0;
         for (int i = 0; i < weightList.getItemCount(); i++) {
             sum += Double.parseDouble(weightList.getItem(i));
@@ -871,22 +1216,44 @@ public class GCV4 extends javax.swing.JFrame {
             pPoints += Double.parseDouble(weightList.getItem(i)) * (Double.parseDouble(scoreList.getItem(i)) / 100.0);
         }
         currentGradeLabel.setText("Current grade: " + ((int) ((pPoints / sum) * 1000)) / 10.0);
+        return (pPoints / sum) * 100.0;
     }
 
-    private void calculateOverallPercentagePoints() {
+    private double calculateOverallPercentagePoints() {
         double pPoints = 0.0;
         for (int i = 0; i < weightList.getItemCount(); i++) {
             pPoints += Double.parseDouble(weightList.getItem(i)) * (Double.parseDouble(scoreList.getItem(i)) / 100.0);
         }
         percentagePointsLabel.setText("Percentage points earned: " + (int) (pPoints * 10) / 10.0);
+        return pPoints;
     }
 
-    private void calculatePercentageComplete() {
+    private double calculatePercentageComplete() {
         double sum = 0.0;
         for (int i = 0; i < weightList.getItemCount(); i++) {
             sum += Double.parseDouble(weightList.getItem(i));
         }
         percentCompleteLabel.setText("Percent complete: " + (int) (sum * 10) / 10.0);
+        return sum;
+    }
+
+    // Check that the title does not already exist for the class.
+    private boolean gradeTitleDoesNotExist(String title) {
+        for (int i = 0; i < titleList.getItemCount(); i++) {
+            if (i != titleList.getSelectedIndex() && titleList.getItem(i).equals(title)) {  // Title differs from all others in list (don't look at the title itself, obviously!)
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean stringIsANumber(String number) {
+        try {
+            Double.parseDouble(number);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -923,24 +1290,34 @@ public class GCV4 extends javax.swing.JFrame {
             }
         });
 
+         deleteFromTables();
+        selectAll();
         /*
-        addCourse("CSC360", 3.0, "Spring", 2018, 'B');
-        addCourse("CSC190", 3.0, "Fall", 2016, 'B');
+       
+        selectAll();
+        
+        addCourse("CSC360", 3.0, "Spring", 2018, "B");
+        addCourse("CSC190", 3.0, "Fall", 2016, "B");
         addAssignment("Test 1", 15, 85.6, 0);
         addAssignment("Quiz 1", 5, 80, 1);
          
-        dropTables();
+       
         createCourseTable();
         createAssignmentTable();
 
-        deleteFromTables();
-        addCourse(1, "CSC360", 3.0, "Spring", 2018, 'B');
-        addCourse(2, "CSC190", 3.0, "Fall", 2016, 'B');
-        addAssignment(1, "Test 1", 15, 85.6, 1);
-        addAssignment(2, "Quiz 1", 5, 80, 2);
-         */
-        selectAll();
-        /*
+        dropTables();
+
+        createCourseTable();
+        createAssignmentTable();
+        
+        addCourse("CSC360", 3.0, "Spring", 2018, "B");
+        addCourse("CSC190", 3.0, "Fall", 2016, "B");
+        
+        addAssignment("Test 1", 15, 85.6, 1);
+        addAssignment("Quiz 1", 5, 80, 2);
+
+        
+
         createNewDatabase();
         createCourseTable();
         createAssignmentTable();
@@ -950,19 +1327,26 @@ public class GCV4 extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addChangesjButton5;
     private javax.swing.JTextField assignmentTitleTextField;
     private javax.swing.JTextField assignmentTitlejTextField1;
+    private javax.swing.JTextField assumedGradejTextField2;
     private javax.swing.JButton canceljButton5;
     private javax.swing.JTextField classNamejTextField1;
     private javax.swing.JComboBox<String> coursesComboBox;
     private javax.swing.JPanel coursesjPanel1;
     private javax.swing.JLabel currentGradeLabel;
+    private javax.swing.JTextField desiredGradejTextField1;
+    private javax.swing.JPanel editGradejPanel1;
     private javax.swing.JPanel gradesjPanel1;
     private javax.swing.JLabel infojLabel1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel newClassjPanel2;
@@ -973,6 +1357,7 @@ public class GCV4 extends javax.swing.JFrame {
     private javax.swing.JTextField scoreTextField;
     private javax.swing.JTextField semesterTakenjTextField1;
     private javax.swing.JComboBox<String> semestersComboBox;
+    private javax.swing.JButton submitChangesToDBjButton2;
     private java.awt.List titleList;
     private java.awt.List weightList;
     private javax.swing.JTextField weightTextField;

@@ -49,24 +49,29 @@
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="165" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="label3" alignment="0" max="32767" attributes="0"/>
-                          <Component id="letterGradeTextField1" alignment="0" max="32767" attributes="0"/>
-                          <Component id="letterGradeTextField3" alignment="0" max="32767" attributes="0"/>
-                          <Component id="letterGradeTextField4" alignment="0" max="32767" attributes="0"/>
-                          <Component id="letterGradeTextField5" alignment="0" max="32767" attributes="0"/>
-                          <Component id="letterGradeTextField6" alignment="0" max="32767" attributes="0"/>
-                          <Component id="letterGradeTextField2" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="hoursTextField6" max="32767" attributes="0"/>
-                          <Component id="label4" min="-2" max="-2" attributes="0"/>
-                          <Component id="hoursTextField1" alignment="0" max="32767" attributes="0"/>
-                          <Component id="hoursTextField2" alignment="0" max="32767" attributes="0"/>
-                          <Component id="hoursTextField3" alignment="0" max="32767" attributes="0"/>
-                          <Component id="hoursTextField4" alignment="0" max="32767" attributes="0"/>
-                          <Component id="hoursTextField5" alignment="0" min="-2" pref="69" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="button3" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="label3" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="letterGradeTextField1" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="letterGradeTextField3" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="letterGradeTextField4" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="letterGradeTextField5" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="letterGradeTextField6" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="letterGradeTextField2" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="hoursTextField6" max="32767" attributes="0"/>
+                                  <Component id="label4" min="-2" max="-2" attributes="0"/>
+                                  <Component id="hoursTextField1" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="hoursTextField2" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="hoursTextField3" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="hoursTextField4" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="hoursTextField5" alignment="0" min="-2" pref="69" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
                       </Group>
                   </Group>
               </Group>
@@ -88,7 +93,7 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               <Component id="addClassButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="196" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="195" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -149,9 +154,11 @@
               <Component id="button1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="button2" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="addClassButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="button3" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="19" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -331,7 +338,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Dialog" size="14" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Your completed credit hours:"/>
+        <Property name="text" type="java.lang.String" value="Your graded credit hours:"/>
       </Properties>
     </Component>
     <Component class="java.awt.Button" name="addClassButton">
@@ -346,6 +353,20 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addClassButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="java.awt.Button" name="button3">
+      <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="33" green="ff" red="33" type="rgb"/>
+        </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Dialog" size="18" style="1"/>
+        </Property>
+        <Property name="label" type="java.lang.String" value="Back to Main Screen"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="button3ActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
