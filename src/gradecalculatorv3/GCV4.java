@@ -247,6 +247,8 @@ public class GCV4 extends javax.swing.JFrame {
         try (Connection conn = DriverManager.getConnection(url);
                 Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
+            System.out.println("created course table");
+            conn.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -270,6 +272,8 @@ public class GCV4 extends javax.swing.JFrame {
         try (Connection conn = DriverManager.getConnection(url);
                 Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
+            System.out.println("created assignment table");
+            conn.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -290,7 +294,10 @@ public class GCV4 extends javax.swing.JFrame {
         String url = "jdbc:sqlite:" + getAbsolutePath();
         try (Connection conn = DriverManager.getConnection(url)) {
             if (conn != null) {
+                System.out.println("null db");
                 DatabaseMetaData meta = conn.getMetaData();
+            } else {
+                System.out.println("db was present");
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -771,7 +778,7 @@ public class GCV4 extends javax.swing.JFrame {
             newClassjPanel2.setVisible(true);
             jButton4.setText("Add");
         } else {
-            if (semesterTakenjTextField1.getText().contains(" ") || semesterTakenjTextField1.getText().contains("-") ) {
+            if (semesterTakenjTextField1.getText().contains(" ") || semesterTakenjTextField1.getText().contains("-")) {
                 JOptionPane.showMessageDialog(null, "Incorrect input! Semester taken cannot contain spaces, dashes, or hyphens.\nAcceptable semester examples: summer, FALL, Winter, fall_term_a", "Error!", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -1290,10 +1297,12 @@ public class GCV4 extends javax.swing.JFrame {
             }
         });
 
-         deleteFromTables();
-        selectAll();
+        
         /*
-       
+        dropTables();
+        createCourseTable();
+        createAssignmentTable();
+      
         selectAll();
         
         addCourse("CSC360", 3.0, "Spring", 2018, "B");

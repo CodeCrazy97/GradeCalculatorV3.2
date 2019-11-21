@@ -31,6 +31,16 @@ public class GPACalculator extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, ex);  // Show the exception message.
         }
 
+        WindowListener exitListener = new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                GCV4 gcv4 = new GCV4();
+                String[] arguments = {};
+                gcv4.main(arguments);
+            }
+        };
+        this.addWindowListener(exitListener);
     }
 
     /**
