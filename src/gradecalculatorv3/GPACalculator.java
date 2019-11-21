@@ -1,9 +1,13 @@
 package gradecalculatorv3;
 
+import static gradecalculatorv3.GCV4.connectToCollege;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import javax.swing.JFrame;
@@ -17,19 +21,15 @@ public class GPACalculator extends javax.swing.JFrame {
         letterGradeTextField1.requestFocusInWindow();  //Set cursor to blinking in this text field.
 
         // show completed credit hours
-        try {
-            double credits = new Querying().getTotalCreditHours();
-            completedGPAHoursTextField2.setText("" + credits);
+        double credits = getTotalCreditHours();
+        completedGPAHoursTextField2.setText("" + credits);
 
-            double gpa = new Querying().getGPA();
+        double gpa = getGPA();
 
-            // format to 3 decimal places
-            gpa = Math.round(gpa * 1000.0) / 1000.0;
+        // format to 3 decimal places
+        gpa = Math.round(gpa * 1000.0) / 1000.0;
 
-            currentGPATextField1.setText("" + gpa);
-        } catch (ClassNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, ex);  // Show the exception message.
-        }
+        currentGPATextField1.setText("" + gpa);
 
         WindowListener exitListener = new WindowAdapter() {
 
@@ -41,6 +41,63 @@ public class GPACalculator extends javax.swing.JFrame {
             }
         };
         this.addWindowListener(exitListener);
+    }
+
+    private static double getGPA() {
+        String sqlString = "SELECT final_grade, credits FROM course;";
+        try (Connection conn = connectToCollege();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sqlString)) {
+
+            double totalCredits = 0.0;
+            double qualityPoints = 0.0;
+            while (rs.next()) {
+                String grade = rs.getString(1);
+                grade = grade.toUpperCase();
+                double credits = rs.getDouble(2);
+                if (grade.equals("A") || grade.equals("B") || grade.equals("C") || grade.equals("D") || grade.equals("F")) {  // These final grade types count towards GPA.
+                    totalCredits += credits;
+                }
+                if (grade.equals("A")) {
+                    qualityPoints += 4.0 * credits;
+                } else if (grade.equals("B")) {
+                    qualityPoints += 3.0 * credits;
+                } else if (grade.equals("C")) {
+                    qualityPoints += 2.0 * credits;
+                } else if (grade.equals("D")) {
+                    qualityPoints += 1.0 * credits;
+                } else {
+                    // no quality points earned
+                }
+            }
+            stmt.close();
+            rs.close();
+            conn.close();
+            return qualityPoints / totalCredits;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);  // Show the exception message.
+            return 0.0;
+        }
+    }
+
+    private static double getTotalCreditHours() {
+        String sqlString = "SELECT sum(credits) FROM course WHERE final_grade = 'A' OR final_grade = 'B' OR final_grade = 'C' OR final_grade = 'D' OR final_grade = 'F';";
+        try (Connection conn = connectToCollege();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sqlString)) {
+
+            double totalCredits = 0;
+            while (rs.next()) {
+                totalCredits += rs.getDouble(1);
+            }
+            stmt.close();
+            rs.close();
+            conn.close();
+            return totalCredits;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);  // Show the exception message.
+            return 0.0;
+        }
     }
 
     /**

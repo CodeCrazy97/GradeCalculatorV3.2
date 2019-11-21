@@ -578,7 +578,7 @@ public class FinalGradesForm extends javax.swing.JPanel {
                     return;
                 }
                 try {
-                    Integer.parseInt(creditsTextField.getText());
+                    Double.parseDouble(creditsTextField.getText());
                 } catch (NumberFormatException nfe) {
                     JOptionPane.showMessageDialog(null, "Check credits that you entered. Must be a double or integer.");
                     return;
