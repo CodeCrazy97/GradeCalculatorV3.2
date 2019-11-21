@@ -66,6 +66,40 @@ public class GCV4 extends javax.swing.JFrame {
     }
 
     // Get all semesters that have assignment grades.
+    public static void createTablesIfNotExist() {
+        // Check that course table exists.
+        String sql = "SELECT COUNT(*) FROM course;";
+        try (Connection conn = connectToCollege();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            if (e.getMessage().contains("no such table: course")) {
+                createCourseTable();
+                // Since course table does not exist, must create assignment table.
+                createAssignmentTable();
+                // Exit this method, since would not want to attempt checking if assignment table exists twice.
+                return;
+            }
+        }
+
+        // Check that assignment table exists (only reached if course table does exist).
+        sql = "SELECT COUNT(*) FROM assignment;";
+        try (Connection conn = connectToCollege();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            if (e.getMessage().contains("no such table: assignment")) {
+                createAssignmentTable();
+            }
+        }
+
+    }
+
+    // Get all semesters that have assignment grades.
     public ArrayList<String> getSemesters() {
         String sql = "SELECT semester_taken, year_taken FROM course GROUP BY semester_taken, year_taken ORDER BY year_taken DESC;";
         ArrayList<String> semesters = new ArrayList<String>();
@@ -1290,6 +1324,8 @@ public class GCV4 extends javax.swing.JFrame {
         }
         //</editor-fold>
 
+        createTablesIfNotExist();
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -1297,11 +1333,13 @@ public class GCV4 extends javax.swing.JFrame {
             }
         });
 
-        
         /*
         dropTables();
+        
+        
         createCourseTable();
         createAssignmentTable();
+        
       
         selectAll();
         

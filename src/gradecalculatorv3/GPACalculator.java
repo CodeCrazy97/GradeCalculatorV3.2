@@ -312,13 +312,10 @@ public class GPACalculator extends javax.swing.JFrame {
                 qualityPoints += calculateQualityPoints(letterGradeTextField6.getText().charAt(0), Double.parseDouble(hoursTextField6.getText()));
             }
             //Now, show the results.
-            System.out.println("quality points = " + qualityPoints);
-            System.out.println("total hours = " + totalHours);
             NumberFormat formatter = new DecimalFormat("#0.00");
             JOptionPane.showMessageDialog(this, "Given the grades you've entered, your GPA will be: " + formatter.format(qualityPoints / totalHours), "Results", JOptionPane.INFORMATION_MESSAGE);
         } catch (NumberFormatException nfe) {
             JOptionPane.showMessageDialog(this, "Something is wrong with your input.", "ERROR", JOptionPane.ERROR_MESSAGE);
-            System.out.println("NFE: " + nfe);
         }
 
     }//GEN-LAST:event_button1ActionPerformed
