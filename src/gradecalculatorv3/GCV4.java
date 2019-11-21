@@ -807,8 +807,8 @@ public class GCV4 extends javax.swing.JFrame {
             newClassjPanel2.setVisible(true);
             jButton4.setText("Add");
         } else {
-            if (semesterTakenjTextField1.getText().contains(" ") || semesterTakenjTextField1.getText().contains("-")) {
-                JOptionPane.showMessageDialog(null, "Incorrect input! Semester taken cannot contain spaces, dashes, or hyphens.\nAcceptable semester examples: summer, FALL, Winter, fall_term_a", "Error!", JOptionPane.ERROR_MESSAGE);
+            if (classNamejTextField1.getText().contains(" ") || classNamejTextField1.getText().contains("-") || semesterTakenjTextField1.getText().contains(" ") || semesterTakenjTextField1.getText().contains("-")) {
+                JOptionPane.showMessageDialog(null, "Incorrect input! Semester and course name taken cannot contain spaces, dashes, or hyphens.\nAcceptable semester examples: summer, FALL, Winter, fall_term_a", "Error!", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             try {
