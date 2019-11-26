@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -37,7 +38,7 @@ public class GCV4 extends javax.swing.JFrame {
                 semestersComboBox.addItem(semesters.get(i));
             }
         }
-        
+
         calculateOverallGrade();
         calculateOverallPercentagePoints();
         calculatePercentageComplete();
@@ -127,13 +128,13 @@ public class GCV4 extends javax.swing.JFrame {
         }
     }
 
-    public static void addCourse(String title, double credits, String semesterTaken, int yearTaken, String finalGrade) throws SQLException {
+    public static void addCourse(String title, double credits, String semesterTaken, int yearTaken, String finalGrade, String requirementSatisfaction) throws SQLException {
         semesterTaken = semesterTaken.toUpperCase();
         title = title.toUpperCase();
 
         String url = "jdbc:sqlite:" + getAbsolutePath();
 
-        String sql = "INSERT INTO course(title, credits, semester_taken, year_taken, final_grade) VALUES(?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO course(title, credits, semester_taken, year_taken, final_grade, requirement_satisfaction) VALUES(?, ?, ?, ?, ?, ?);";
 
         try (Connection conn = connectToCollege(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
             //pstmt.setInt(1, id);
@@ -142,7 +143,7 @@ public class GCV4 extends javax.swing.JFrame {
             pstmt.setString(3, semesterTaken);
             pstmt.setInt(4, yearTaken);
             pstmt.setString(5, finalGrade);
-            System.out.println("\n\ntitle = " + title + ", semester taken = " + semesterTaken + ", year taken = " + yearTaken);
+            pstmt.setString(6, requirementSatisfaction);
             pstmt.executeUpdate();
             conn.close();
         }
@@ -260,6 +261,7 @@ public class GCV4 extends javax.swing.JFrame {
                 + "	semester_taken CHAR(12) NOT NULL,\n"
                 + "	year_taken INT(4) NOT NULL,\n"
                 + "	final_grade CHAR(1),\n"
+                + "     requirement_satisfaction CHAR(13),\n"
                 + "	UNIQUE (title, semester_taken, year_taken)\n"
                 + ");";
 
@@ -356,7 +358,7 @@ public class GCV4 extends javax.swing.JFrame {
         classNamejTextField1 = new javax.swing.JTextField();
         yearTakenjTextField1 = new javax.swing.JTextField();
         semesterTakenjTextField1 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        reqSatisfactionjComboBox1 = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
         coursesjPanel1 = new javax.swing.JPanel();
         coursesComboBox = new javax.swing.JComboBox<>();
@@ -370,6 +372,8 @@ public class GCV4 extends javax.swing.JFrame {
         scoreTextField = new javax.swing.JTextField();
         infojLabel1 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -588,7 +592,7 @@ public class GCV4 extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Gen Ed E1", "Gen Ed E1", "Gen Ed E1", "Gen Ed E1", "Gen Ed E1", "Gen Ed E1", "Supporting", "Core", "Concentration", "Elective" }));
+        reqSatisfactionjComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Gen Ed E1", "Gen Ed E2", "Gen Ed E3", "Gen Ed E4", "Gen Ed E5", "Gen Ed E6", "Supporting", "Core", "Concentration", "Elective" }));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 2, 16)); // NOI18N
         jLabel3.setText("Requirement Satisfaction:");
@@ -604,7 +608,7 @@ public class GCV4 extends javax.swing.JFrame {
                         .addComponent(classNamejTextField1)
                         .addComponent(yearTakenjTextField1)
                         .addComponent(semesterTakenjTextField1)
-                        .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(reqSatisfactionjComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jLabel3))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -617,11 +621,11 @@ public class GCV4 extends javax.swing.JFrame {
                 .addComponent(yearTakenjTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(semesterTakenjTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(reqSatisfactionjComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         coursesComboBox.addItemListener(new java.awt.event.ItemListener() {
@@ -729,6 +733,20 @@ public class GCV4 extends javax.swing.JFrame {
             }
         });
 
+        jButton6.setText("Degree Progress");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
+        jButton7.setText("Edit/View Courses");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -767,8 +785,12 @@ public class GCV4 extends javax.swing.JFrame {
                         .addGap(99, 99, 99)
                         .addComponent(canceljButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 772, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(442, 442, 442)
-                        .addComponent(jButton2)))
+                        .addGap(359, 359, 359)
+                        .addComponent(jButton6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton7)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -795,7 +817,10 @@ public class GCV4 extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addComponent(canceljButton5)
                 .addGap(18, 18, 18)
-                .addComponent(jButton2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
+                    .addComponent(jButton6)
+                    .addComponent(jButton7))
                 .addGap(34, 34, 34))
         );
 
@@ -820,7 +845,7 @@ public class GCV4 extends javax.swing.JFrame {
 
                 // Now try inserting into the database.
                 try {
-                    addCourse(classNamejTextField1.getText(), 3.0, semesterTakenjTextField1.getText(), Integer.parseInt(yearTakenjTextField1.getText()), "");
+                    addCourse(classNamejTextField1.getText(), 3.0, semesterTakenjTextField1.getText(), Integer.parseInt(yearTakenjTextField1.getText()), "", reqSatisfactionjComboBox1.getSelectedItem().toString());
 
                     newClassjPanel2.setVisible(false);
                     jButton4.setText("Add Class");
@@ -1214,6 +1239,20 @@ public class GCV4 extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_submitChangesToDBjButton2ActionPerformed
 
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        DegreeProgress degreeProgress = new DegreeProgress();
+        String[] arguments = {};
+        degreeProgress.main(arguments);
+        this.dispose();
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        // Show the classes editor screen.
+        JFrame frame = new JFrame("Classes");
+        FinalGradesForm classAdder = new FinalGradesForm(frame);
+        this.dispose();
+    }//GEN-LAST:event_jButton7ActionPerformed
+
     private int getCourseID(String title, String semester, int year) {
         String sql = "SELECT id FROM course WHERE title = '" + title + "' AND semester_taken = '" + semester + "' AND year_taken = " + year + ";";
         try (Connection conn = connectToCollege();
@@ -1391,7 +1430,8 @@ public class GCV4 extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -1400,6 +1440,7 @@ public class GCV4 extends javax.swing.JFrame {
     private javax.swing.JPanel newClassjPanel2;
     private javax.swing.JLabel percentCompleteLabel;
     private javax.swing.JLabel percentagePointsLabel;
+    private javax.swing.JComboBox<String> reqSatisfactionjComboBox1;
     private java.awt.List scoreList;
     private javax.swing.JTextField scoreReceivedjTextField3;
     private javax.swing.JTextField scoreTextField;
