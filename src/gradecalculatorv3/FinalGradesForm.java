@@ -16,11 +16,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 /**
  *
@@ -105,7 +102,6 @@ public class FinalGradesForm extends javax.swing.JPanel {
                     int year = Integer.parseInt(rs.getString(3));
                     classesComboBox.addItem(title + " - " + semester + " " + year);
                 }
-                System.out.println(classesComboBox.getItemCount());
                 if (classesComboBox.getItemCount() == 0) {
                     deleteButton.setVisible(false);
                     editButton1.setVisible(false);
@@ -336,6 +332,8 @@ public class FinalGradesForm extends javax.swing.JPanel {
                 String semester = "";
                 int year = -1;
                 try {
+                    
+                    // Error checking.
                     wholeSemester = semesterTextField.getText();
                     if (wholeSemester.contains("-")) {
                         JOptionPane.showMessageDialog(null, "Semester cannot contain dashes or hyphens.");
@@ -346,7 +344,7 @@ public class FinalGradesForm extends javax.swing.JPanel {
                         return;
                     }
                     try {
-                        Integer.parseInt(creditsTextField.getText());
+                        Double.parseDouble(creditsTextField.getText());
                     } catch (NumberFormatException nfe) {
                         JOptionPane.showMessageDialog(null, "Check credits that you entered. Must be a double or integer.");
                         return;

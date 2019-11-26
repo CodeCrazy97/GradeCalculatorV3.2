@@ -37,15 +37,7 @@ public class GCV4 extends javax.swing.JFrame {
                 semestersComboBox.addItem(semesters.get(i));
             }
         }
-
-        /*
-        titleList.add("Assignment 5");
-        weightList.add("10.5");
-        scoreList.add("98.3");
-        titleList.add("Test 1");
-        weightList.add("25");
-        scoreList.add("68");
-         */
+        
         calculateOverallGrade();
         calculateOverallPercentagePoints();
         calculatePercentageComplete();
@@ -69,7 +61,6 @@ public class GCV4 extends javax.swing.JFrame {
                 ResultSet rs = stmt.executeQuery(sql)) {
             conn.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
             if (e.getMessage().contains("no such table: course")) {
                 createCourseTable();
                 // Since course table does not exist, must create assignment table.
@@ -86,7 +77,6 @@ public class GCV4 extends javax.swing.JFrame {
                 ResultSet rs = stmt.executeQuery(sql)) {
             conn.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
             if (e.getMessage().contains("no such table: assignment")) {
                 createAssignmentTable();
             }
