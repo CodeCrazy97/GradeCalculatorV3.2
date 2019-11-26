@@ -5,9 +5,7 @@
  */
 package gradecalculatorv3;
 
-import java.awt.List;
 import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -16,10 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
 
 /**
  *
@@ -42,15 +37,7 @@ public class GCV4 extends javax.swing.JFrame {
                 semestersComboBox.addItem(semesters.get(i));
             }
         }
-
-        /*
-        titleList.add("Assignment 5");
-        weightList.add("10.5");
-        scoreList.add("98.3");
-        titleList.add("Test 1");
-        weightList.add("25");
-        scoreList.add("68");
-         */
+        
         calculateOverallGrade();
         calculateOverallPercentagePoints();
         calculatePercentageComplete();
@@ -74,7 +61,6 @@ public class GCV4 extends javax.swing.JFrame {
                 ResultSet rs = stmt.executeQuery(sql)) {
             conn.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
             if (e.getMessage().contains("no such table: course")) {
                 createCourseTable();
                 // Since course table does not exist, must create assignment table.
@@ -91,7 +77,6 @@ public class GCV4 extends javax.swing.JFrame {
                 ResultSet rs = stmt.executeQuery(sql)) {
             conn.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
             if (e.getMessage().contains("no such table: assignment")) {
                 createAssignmentTable();
             }
@@ -812,8 +797,8 @@ public class GCV4 extends javax.swing.JFrame {
             newClassjPanel2.setVisible(true);
             jButton4.setText("Add");
         } else {
-            if (semesterTakenjTextField1.getText().contains(" ") || semesterTakenjTextField1.getText().contains("-")) {
-                JOptionPane.showMessageDialog(null, "Incorrect input! Semester taken cannot contain spaces, dashes, or hyphens.\nAcceptable semester examples: summer, FALL, Winter, fall_term_a", "Error!", JOptionPane.ERROR_MESSAGE);
+            if (classNamejTextField1.getText().contains(" ") || classNamejTextField1.getText().contains("-") || semesterTakenjTextField1.getText().contains(" ") || semesterTakenjTextField1.getText().contains("-")) {
+                JOptionPane.showMessageDialog(null, "Incorrect input! Semester and course name taken cannot contain spaces, dashes, or hyphens.\nAcceptable semester examples: summer, FALL, Winter, fall_term_a", "Error!", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             try {
