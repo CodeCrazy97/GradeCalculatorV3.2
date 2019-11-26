@@ -55,6 +55,8 @@ public class FinalGradesForm extends javax.swing.JPanel {
         finalGradeTextField.setEditable(false);
         semesterTextField.setEditable(false);
         creditsTextField.setEditable(false);
+        reqSatisfactionjComboBox1.setEditable(false);
+        reqSatisfactionjComboBox1.setEnabled(false);
 
         // make pressing the Enter key the same as clicking the mouse
         frame.getRootPane().setDefaultButton(addAClassButton);
@@ -64,7 +66,7 @@ public class FinalGradesForm extends javax.swing.JPanel {
 
     public void getInfoAboutCourse(String title, String semester, int year) {
         try {
-            String sql = "SELECT id, title, credits, semester_taken, year_taken, final_grade FROM course WHERE title = '" + title + "' AND semester_taken = '" + semester + "' AND year_taken = " + year + ";";
+            String sql = "SELECT id, title, credits, semester_taken, year_taken, final_grade, requirement_satisfaction FROM course WHERE title = '" + title + "' AND semester_taken = '" + semester + "' AND year_taken = " + year + ";";
             try (Connection conn = connectToCollege();
                     Statement stmt = conn.createStatement();
                     ResultSet rs = stmt.executeQuery(sql)) {
@@ -75,6 +77,7 @@ public class FinalGradesForm extends javax.swing.JPanel {
                     creditsTextField.setText(rs.getString(3));
                     semesterTextField.setText(semester + " " + year);
                     finalGradeTextField.setText(rs.getString(6));
+                    reqSatisfactionjComboBox1.setSelectedItem(rs.getString(7));
                 }
                 conn.close();
             } catch (SQLException e) {
@@ -137,6 +140,8 @@ public class FinalGradesForm extends javax.swing.JPanel {
         deleteButton = new javax.swing.JButton();
         editButton1 = new javax.swing.JButton();
         editButton2 = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        reqSatisfactionjComboBox1 = new javax.swing.JComboBox<>();
 
         setForeground(new java.awt.Color(102, 255, 255));
         setOpaque(false);
@@ -240,20 +245,19 @@ public class FinalGradesForm extends javax.swing.JPanel {
             }
         });
 
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        jLabel5.setText("Requirement:");
+
+        reqSatisfactionjComboBox1.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        reqSatisfactionjComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Gen Ed E1", "Gen Ed E2", "Gen Ed E3", "Gen Ed E4", "Gen Ed E5", "Gen Ed E6", "Supporting", "Core", "Concentration", "Elective" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(113, Short.MAX_VALUE)
+                .addContainerGap(101, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(deleteButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(addAClassButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(editButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(editButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(134, 134, 134))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(classesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(72, 72, 72))
@@ -262,14 +266,28 @@ public class FinalGradesForm extends javax.swing.JPanel {
                             .addComponent(jLabel3)
                             .addComponent(jLabel2)
                             .addComponent(jLabel4)
-                            .addComponent(jLabel1))
-                        .addGap(24, 24, 24)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel5))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(finalGradeTextField)
-                            .addComponent(semesterTextField)
-                            .addComponent(creditsTextField)
-                            .addComponent(classNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(24, 24, 24)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(finalGradeTextField)
+                                    .addComponent(semesterTextField)
+                                    .addComponent(creditsTextField)
+                                    .addComponent(classNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(reqSatisfactionjComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGap(44, 44, 44))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(136, 136, 136)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(deleteButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(addAClassButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(editButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(editButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -293,7 +311,11 @@ public class FinalGradesForm extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(semesterTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addGap(27, 27, 27)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(reqSatisfactionjComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
                 .addComponent(addAClassButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -301,7 +323,7 @@ public class FinalGradesForm extends javax.swing.JPanel {
                 .addComponent(editButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(editButton2)
-                .addContainerGap(66, Short.MAX_VALUE))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -322,6 +344,7 @@ public class FinalGradesForm extends javax.swing.JPanel {
             finalGradeTextField.setEditable(true);
             semesterTextField.setEditable(true);
             creditsTextField.setEditable(true);
+            reqSatisfactionjComboBox1.setEnabled(true);
 
         } else {
             // Try submitting to database.
@@ -332,7 +355,7 @@ public class FinalGradesForm extends javax.swing.JPanel {
                 String semester = "";
                 int year = -1;
                 try {
-                    
+
                     // Error checking.
                     wholeSemester = semesterTextField.getText();
                     if (wholeSemester.contains("-")) {
@@ -367,7 +390,7 @@ public class FinalGradesForm extends javax.swing.JPanel {
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Be sure your semester is of correct format." + e + "\nExample correct formats: fall 2018, summer 2020, spring_session_a 2021");
                 }
-                String sql = "INSERT INTO course(title, credits, semester_taken, year_taken, final_grade) VALUES('" + classNameTextField.getText().toUpperCase() + "', " + creditsTextField.getText() + ", '" + semester.toUpperCase() + "', " + year + ", '" + finalGradeTextField.getText().toUpperCase() + "');";
+                String sql = "INSERT INTO course(title, credits, semester_taken, year_taken, final_grade, requirement_satisfaction) VALUES('" + classNameTextField.getText().toUpperCase() + "', " + creditsTextField.getText() + ", '" + semester.toUpperCase() + "', " + year + ", '" + finalGradeTextField.getText().toUpperCase() + "', '" + reqSatisfactionjComboBox1.getSelectedItem().toString() + "');";
                 try (Connection conn = connectToCollege(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
                     pstmt.executeUpdate();
                     conn.close();
@@ -399,7 +422,7 @@ public class FinalGradesForm extends javax.swing.JPanel {
             finalGradeTextField.setEditable(false);
             semesterTextField.setEditable(false);
             creditsTextField.setEditable(false);
-
+            reqSatisfactionjComboBox1.setEnabled(false);
         }
     }//GEN-LAST:event_addAClassButtonActionPerformed
 
@@ -421,6 +444,7 @@ public class FinalGradesForm extends javax.swing.JPanel {
             finalGradeTextField.setEditable(false);
             semesterTextField.setEditable(false);
             creditsTextField.setEditable(false);
+            reqSatisfactionjComboBox1.setEnabled(false);
             classesComboBox.setSelectedIndex(0);
         } else if (classesComboBox.getItemCount() > 0 && JOptionPane.showConfirmDialog(null, "Are you sure you would like to delete the course?", "Confirm",
                 JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
@@ -566,6 +590,7 @@ public class FinalGradesForm extends javax.swing.JPanel {
             finalGradeTextField.setEditable(true);
             semesterTextField.setEditable(true);
             creditsTextField.setEditable(true);
+            reqSatisfactionjComboBox1.setEnabled(true);
 
         } else {
             // Try submitting changes to database.
@@ -608,7 +633,7 @@ public class FinalGradesForm extends javax.swing.JPanel {
                 int year = Integer.parseInt(wholeSemester.substring(wholeSemester.indexOf(" ") + 1));
 
                 String sql = "UPDATE course SET title = '" + classNameTextField.getText().toUpperCase() + "', credits = " + creditsTextField.getText() + ", final_grade = '" + finalGradeTextField.getText().toUpperCase() + "', semester_taken = '" + semester.toUpperCase()
-                        + "', year_taken = " + year + " WHERE id = " + getCourseID(oldTitle, oldSemester, oldYear) + ";";
+                        + "', year_taken = " + year + ", requirement_satisfaction = '" + reqSatisfactionjComboBox1.getSelectedItem().toString() + "' WHERE id = " + getCourseID(oldTitle, oldSemester, oldYear) + ";";
 
                 try (Connection conn = connectToCollege(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
                     pstmt.executeUpdate();
@@ -638,6 +663,7 @@ public class FinalGradesForm extends javax.swing.JPanel {
             finalGradeTextField.setEditable(false);
             semesterTextField.setEditable(false);
             creditsTextField.setEditable(false);
+            reqSatisfactionjComboBox1.setEnabled(false);
 
         }
     }//GEN-LAST:event_editButton1ActionPerformed
@@ -660,6 +686,8 @@ public class FinalGradesForm extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JComboBox<String> reqSatisfactionjComboBox1;
     private javax.swing.JTextField semesterTextField;
     // End of variables declaration//GEN-END:variables
 }
