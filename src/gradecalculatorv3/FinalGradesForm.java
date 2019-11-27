@@ -31,7 +31,7 @@ public class FinalGradesForm extends javax.swing.JPanel {
     public FinalGradesForm(JFrame frame) {
         initComponents();
         super.setOpaque(true);
-        this.setBackground(Color.cyan);
+        this.setBackground(Color.yellow);
 
         // Create the JFrame for this window.
         frame.add(this);

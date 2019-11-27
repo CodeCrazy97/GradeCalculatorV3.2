@@ -5,6 +5,7 @@
  */
 package gradecalculatorv3;
 
+import java.awt.Color;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -28,7 +29,7 @@ public class GCV4 extends javax.swing.JFrame {
      */
     public GCV4() {
         initComponents();
-
+        this.getContentPane().setBackground(Color.yellow);
         ArrayList<String> semesters = getSemesters();
         if (semesters.size() == 0) {
             coursesjPanel1.setVisible(false);
@@ -377,6 +378,8 @@ public class GCV4 extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        gradesjPanel1.setBackground(new java.awt.Color(255, 255, 0));
+
         titleList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 titleListMouseClicked(evt);
@@ -562,6 +565,8 @@ public class GCV4 extends javax.swing.JFrame {
             }
         });
 
+        newClassjPanel2.setBackground(new java.awt.Color(255, 255, 0));
+
         classNamejTextField1.setText("Class Name (max. 7 characters)");
         classNamejTextField1.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -627,6 +632,8 @@ public class GCV4 extends javax.swing.JFrame {
                 .addComponent(reqSatisfactionjComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        coursesjPanel1.setBackground(new java.awt.Color(255, 255, 0));
 
         coursesComboBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
