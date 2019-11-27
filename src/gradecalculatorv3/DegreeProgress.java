@@ -161,28 +161,281 @@ public class DegreeProgress extends javax.swing.JFrame {
         degreeProgressjTextArea1.setText("");
         // A new concentration was chose, so recalculate the degree progress.
         String concentrationSelection = concentrationsjComboBox1.getSelectedItem().toString();
+        System.out.println("Conc. selection - " + concentrationSelection);
+        degreeProgressjTextArea1.append(getCoreSatisfaction() + "\n");
+        degreeProgressjTextArea1.append(getSupportingSatisfaction(concentrationSelection) + "\n");
+        degreeProgressjTextArea1.append(getConcentrationSatisfaction(concentrationSelection) + "\n");
         degreeProgressjTextArea1.append(getGenEdE1() + "\n");
         degreeProgressjTextArea1.append(getGenEdE2() + "\n");
         degreeProgressjTextArea1.append(getGenEdE3() + "\n");
         degreeProgressjTextArea1.append(getGenEdE4() + "\n");
         degreeProgressjTextArea1.append(getGenEdE5() + "\n");
         degreeProgressjTextArea1.append(getGenEdE6() + "\n");
-        degreeProgressjTextArea1.append(getWritingIntensiveSatisfaction()+ "\n");
+        degreeProgressjTextArea1.append(getWritingIntensiveSatisfaction() + "\n");
+
     }
 
-    
-    private String getACCTSatisfaction() {
-        String sql = "SELECT COUNT(*) FROM course WHERE title LIKE '%W' AND final_grade != '' AND final_grade != 'F';";
+    private String getConcentrationSatisfaction(String concentration) {
+        if (concentration.equals("General")) {
+            String sql = "SELECT SUM(credits) FROM course WHERE requirement_satisfaction LIKE 'Concentration' AND final_grade != '' AND final_grade != 'F';";
+            try (Connection conn = connectToCollege();
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery(sql)) {
+
+                // loop through the result set
+                while (rs.next()) {
+                    double hours = rs.getDouble(1);
+                    if (hours >= 24) {
+                        return "You have completed all concentration coursework.";
+                    } else {
+                        return "You have " + (24 - hours) + " more hours of concentration coursework.";
+                    }
+                }
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            return null;
+        } else if (concentration.equals("Statistical Computing")) {
+            String sql = "SELECT SUM(credits) FROM course WHERE requirement_satisfaction LIKE 'Concentration' AND final_grade != '' AND final_grade != 'F';";
+            try (Connection conn = connectToCollege();
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery(sql)) {
+
+                // loop through the result set
+                while (rs.next()) {
+                    double hours = rs.getDouble(1);
+                    if (hours >= 9) {
+                        return "You have completed all concentration coursework.";
+                    } else {
+                        return "You have " + (9 - hours) + " more hours of concentration coursework.";
+                    }
+                }
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            return null;
+        } else if (concentration.equals("Technology")) {
+            String sql = "SELECT SUM(credits) FROM course WHERE requirement_satisfaction LIKE 'Concentration' AND final_grade != '' AND final_grade != 'F';";
+            try (Connection conn = connectToCollege();
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery(sql)) {
+
+                // loop through the result set
+                while (rs.next()) {
+                    double hours = rs.getDouble(1);
+                    if (hours >= 18) {
+                        return "You have completed all concentration coursework.";
+                    } else {
+                        return "You have " + (18 - hours) + " more hours of concentration coursework.";
+                    }
+                }
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            return null;
+        } else if (concentration.equals("Interactive Multimedia")) {
+            String sql = "SELECT SUM(credits) FROM course WHERE requirement_satisfaction LIKE 'Concentration' AND final_grade != '' AND final_grade != 'F';";
+            try (Connection conn = connectToCollege();
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery(sql)) {
+
+                // loop through the result set
+                while (rs.next()) {
+                    double hours = rs.getDouble(1);
+                    if (hours >= 21) {
+                        return "You have completed all concentration coursework.";
+                    } else {
+                        return "You have " + (21 - hours) + " more hours of concentration coursework.";
+                    }
+                }
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            return null;
+        } else if (concentration.equals("Bioinformatics")) {
+            String sql = "SELECT SUM(credits) FROM course WHERE requirement_satisfaction LIKE 'Concentration' AND final_grade != '' AND final_grade != 'F';";
+            try (Connection conn = connectToCollege();
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery(sql)) {
+
+                // loop through the result set
+                while (rs.next()) {
+                    double hours = rs.getDouble(1);
+                    if (hours >= 9) {
+                        return "You have completed all concentration coursework.";
+                    } else {
+                        return "You have " + (9 - hours) + " more hours of concentration coursework.";
+                    }
+                }
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            return null;
+        } else {//Forensics & Security
+            String sql = "SELECT SUM(credits) FROM course WHERE requirement_satisfaction LIKE 'Concentration' AND final_grade != '' AND final_grade != 'F';";
+            try (Connection conn = connectToCollege();
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery(sql)) {
+
+                // loop through the result set
+                while (rs.next()) {
+                    double hours = rs.getDouble(1);
+                    if (hours >= 24) {
+                        return "You have completed all concentration coursework.";
+                    } else {
+                        return "You have " + (24 - hours) + " more hours of concentration coursework.";
+                    }
+                }
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            return null;
+        }
+    }
+
+    private String getSupportingSatisfaction(String concentration) {
+        if (concentration.equals("General")) {
+            String sql = "SELECT SUM(credits) FROM course WHERE requirement_satisfaction LIKE 'Supporting' AND final_grade != '' AND final_grade != 'F';";
+            try (Connection conn = connectToCollege();
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery(sql)) {
+
+                // loop through the result set
+                while (rs.next()) {
+                    double hours = rs.getDouble(1);
+                    if (hours >= 26) {
+                        return "You have completed all supporting coursework.";
+                    } else {
+                        return "You must complete 22-26 hours of supporting coursework. So far, you've completed " + hours + " hours.";
+                    }
+                }
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            return null;
+        } else if (concentration.equals("Statistical Computing")) {
+            String sql = "SELECT SUM(credits) FROM course WHERE requirement_satisfaction LIKE 'Supporting' AND final_grade != '' AND final_grade != 'F';";
+            try (Connection conn = connectToCollege();
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery(sql)) {
+
+                // loop through the result set
+                while (rs.next()) {
+                    double hours = rs.getDouble(1);
+                    if (hours >= 33) {
+                        return "You have completed all supporting coursework.";
+                    } else {
+                        return "You must complete 32-33 hours of supporting coursework. So far, you've completed " + hours + " hours.";
+                    }
+                }
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            return null;
+        } else if (concentration.equals("Technology")) {
+            String sql = "SELECT SUM(credits) FROM course WHERE requirement_satisfaction LIKE 'Supporting' AND final_grade != '' AND final_grade != 'F';";
+            try (Connection conn = connectToCollege();
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery(sql)) {
+
+                // loop through the result set
+                while (rs.next()) {
+                    double hours = rs.getDouble(1);
+                    if (hours >= 25) {
+                        return "You have completed all supporting coursework.";
+                    } else {
+                        return "You must complete 24-25 hours of supporting coursework. So far, you've completed " + hours + " hours.";
+                    }
+                }
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            return null;
+        } else if (concentration.equals("Interactive Multimedia")) {
+            String sql = "SELECT SUM(credits) FROM course WHERE requirement_satisfaction LIKE 'Supporting' AND final_grade != '' AND final_grade != 'F';";
+            try (Connection conn = connectToCollege();
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery(sql)) {
+
+                // loop through the result set
+                while (rs.next()) {
+                    double hours = rs.getDouble(1);
+                    if (hours >= 33) {
+                        return "You have completed all supporting coursework.";
+                    } else {
+                        return "You must complete 30-33 hours of supporting coursework. So far, you've completed " + hours + " hours.";
+                    }
+                }
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            return null;
+        } else if (concentration.equals("Bioinformatics")) {
+            String sql = "SELECT SUM(credits) FROM course WHERE requirement_satisfaction LIKE 'Supporting' AND final_grade != '' AND final_grade != 'F';";
+            try (Connection conn = connectToCollege();
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery(sql)) {
+
+                // loop through the result set
+                while (rs.next()) {
+                    double hours = rs.getDouble(1);
+                    if (hours >= 48) {
+                        return "You have completed all supporting coursework.";
+                    } else {
+                        return "You have " + (48 - hours) + " more hours of supporting coursework.";
+                    }
+                }
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            return null;
+        } else {//Forensics & Security
+            String sql = "SELECT SUM(credits) FROM course WHERE requirement_satisfaction LIKE 'Supporting' AND final_grade != '' AND final_grade != 'F';";
+            try (Connection conn = connectToCollege();
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery(sql)) {
+
+                // loop through the result set
+                while (rs.next()) {
+                    double hours = rs.getDouble(1);
+                    if (hours >= 31) {
+                        return "You have completed all supporting coursework.";
+                    } else {
+                        return "You have " + (31 - hours) + " more hours of supporting coursework.";
+                    }
+                }
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            return null;
+        }
+    }
+
+    private String getCoreSatisfaction() {
+        String sql = "SELECT SUM(credits) FROM course WHERE requirement_satisfaction LIKE 'Core' AND final_grade != '' AND final_grade != 'F';";
         try (Connection conn = connectToCollege();
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql)) {
 
             // loop through the result set
             while (rs.next()) {
-                if (rs.getInt(1) == 0) {
-                    return "You have not satisfied the writing intensive requirement.";
+                double hours = rs.getDouble(1);
+                if (hours >= 25) {
+                    return "You have completed all core coursework.";
                 } else {
-                    return "You have completed the writing intensive requirement.";
+                    return "You have " + (25 - hours) + " more hours of core coursework.";
                 }
             }
             conn.close();
@@ -191,7 +444,28 @@ public class DegreeProgress extends javax.swing.JFrame {
         }
         return null;
     }
-    
+
+    private String getACCTSatisfaction() {
+        String sql = "SELECT COUNT(*) FROM course WHERE (title LIKE 'CSC349%' OR title LIKE 'CSC440%' OR title LIKE 'CSC491%' OR title LIKE 'CSC549%' OR title LIKE 'CSC495%') AND final_grade != '' AND final_grade != 'F';";
+        try (Connection conn = connectToCollege();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+
+            // loop through the result set
+            while (rs.next()) {
+                if (rs.getInt(1) == 0) {
+                    return "You have not satisfied the ACCT requirement.";
+                } else {
+                    return "You have satisfied the ACCT requirement.";
+                }
+            }
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
     private String getWritingIntensiveSatisfaction() {
         String sql = "SELECT COUNT(*) FROM course WHERE title LIKE '%W' AND final_grade != '' AND final_grade != 'F';";
         try (Connection conn = connectToCollege();
@@ -221,7 +495,12 @@ public class DegreeProgress extends javax.swing.JFrame {
 
             // loop through the result set
             while (rs.next()) {
-                return "You have completed " + rs.getDouble(1) + " hour(s) of general education element 1 coursework.";
+                double hours = rs.getDouble(1);
+                if (hours >= 6) {
+                    return "You have completed general education element 1 coursework.";
+                } else {
+                    return "You have " + (6 - hours) + " more hours of general eductaion element 1 coursework.";
+                }
             }
             conn.close();
         } catch (SQLException e) {
@@ -238,7 +517,12 @@ public class DegreeProgress extends javax.swing.JFrame {
 
             // loop through the result set
             while (rs.next()) {
-                return "You have completed " + rs.getDouble(1) + " hour(s) of general education element 2 coursework.";
+                double hours = rs.getDouble(1);
+                if (hours >= 3) {
+                    return "You have completed general education element 2 coursework.";
+                } else {
+                    return "You have " + (3 - hours) + " more hours of general eductaion element 2 coursework.";
+                }
             }
             conn.close();
         } catch (SQLException e) {
@@ -255,7 +539,12 @@ public class DegreeProgress extends javax.swing.JFrame {
 
             // loop through the result set
             while (rs.next()) {
-                return "You have completed " + rs.getDouble(1) + " hour(s) of general education element 3 coursework.";
+                double hours = rs.getDouble(1);
+                if (hours >= 6) {
+                    return "You have completed general education element 3 coursework.";
+                } else {
+                    return "You have " + (6 - hours) + " more hours of general eductaion element 3 coursework.";
+                }
             }
             conn.close();
         } catch (SQLException e) {
@@ -272,7 +561,12 @@ public class DegreeProgress extends javax.swing.JFrame {
 
             // loop through the result set
             while (rs.next()) {
-                return "You have completed " + rs.getDouble(1) + " hour(s) of general education element 4 coursework.";
+                double hours = rs.getDouble(1);
+                if (hours >= 6) {
+                    return "You have completed general education element 4 coursework.";
+                } else {
+                    return "You have " + (6 - hours) + " more hours of general eductaion element 4 coursework.";
+                }
             }
             conn.close();
         } catch (SQLException e) {
@@ -289,7 +583,12 @@ public class DegreeProgress extends javax.swing.JFrame {
 
             // loop through the result set
             while (rs.next()) {
-                return "You have completed " + rs.getDouble(1) + " hour(s) of general education element 5 coursework.";
+                double hours = rs.getDouble(1);
+                if (hours >= 6) {
+                    return "You have completed general education element 5 coursework.";
+                } else {
+                    return "You have " + (6 - hours) + " more hours of general eductaion element 5 coursework.";
+                }
             }
             conn.close();
         } catch (SQLException e) {
@@ -306,7 +605,12 @@ public class DegreeProgress extends javax.swing.JFrame {
 
             // loop through the result set
             while (rs.next()) {
-                return "You have completed " + rs.getDouble(1) + " hour(s) of general education element 6 coursework.";
+                double hours = rs.getDouble(1);
+                if (hours >= 6) {
+                    return "You have completed general education element 6 coursework.";
+                } else {
+                    return "You have " + (6 - hours) + " more hours of general eductaion element 6 coursework.";
+                }
             }
             conn.close();
         } catch (SQLException e) {

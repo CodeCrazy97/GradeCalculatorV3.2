@@ -644,8 +644,8 @@ public class FinalGradesForm extends javax.swing.JPanel {
 
                 editButton1.setText("Edit Class");
                 addAClassButton.setVisible(true);
-                classesComboBox.remove(classesComboBox.getSelectedIndex());
                 classesComboBox.addItem(classNameTextField.getText().toUpperCase() + " - " + semester.toUpperCase() + " " + year);
+                classesComboBox.removeItemAt(classesComboBox.getSelectedIndex());
                 classesComboBox.setSelectedIndex(classesComboBox.getItemCount() - 1);
                 JOptionPane.showMessageDialog(this,
                         "Successfully modified the class.",
