@@ -9,9 +9,25 @@ This calculator helps me keep track of my grades in classes. It stores informati
 
 ## Installation Instructions
 
-To install this product, you will need MySQL on your machine. 
+To run this program, you must have Netbeans 8.1 installed. You will need to add the SQLite driver (which is included in the src folder of the project). Follow the below instructions to do so:
 
-Before running the program, you will need to create the database. Run the CreateDatabase.sql file. This file will create the database in which grades will be stored.
+1. Open Netbeans IDE.
+2. Click "File" > "Open Project" and find the unzipped project. Open it.
+3. When you first attempt to open the project in Netbeans, the following window will pop up. It is warning you about references to the SQLite database that don't exist. You will resolve this in step 4.
+
+![Pop up Error](https://github.com/CodeCrazy97/GradeCalculatorV3.2/blob/master/projecterror.PNG)
+
+Ignore this warning by clicking "Close".
+
+4. Right click on "Libraries" in the project structure and select "Add JAR/Folder".
+5. Go to the src folder in the project and select the sqlite-jdbc-3.27.2.1 jar file (jar is located in "[path to project]\GradeCalculatorV3\src\gradecalculatorv3\sqlite-jdbc-3.27.2.1.jar"). This will allow the project to use the SQLite database.
+6. You should now be able to run the project successfully.
+
+![Resolving SQLite Driver Error](https://github.com/CodeCrazy97/GradeCalculatorV3.2/blob/master/fixerror.PNG)
+
+If you have any questions, or there are bugs with this project, please reach out to me.
+
+
 
 
 ## Built With
