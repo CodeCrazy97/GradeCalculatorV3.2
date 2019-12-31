@@ -51,8 +51,6 @@ public class Main extends javax.swing.JFrame {
         classNamejTextField1 = new javax.swing.JTextField();
         yearTakenjTextField1 = new javax.swing.JTextField();
         semesterTakenjTextField1 = new javax.swing.JTextField();
-        reqSatisfactionjComboBox2 = new javax.swing.JComboBox<>();
-        jLabel7 = new javax.swing.JLabel();
         canceljButton5 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         gradesjPanel1 = new javax.swing.JPanel();
@@ -207,24 +205,16 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        reqSatisfactionjComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Gen Ed E1", "Gen Ed E2", "Gen Ed E3", "Gen Ed E4", "Gen Ed E5", "Gen Ed E6", "Supporting", "Core", "Concentration", "Elective" }));
-
-        jLabel7.setFont(new java.awt.Font("Tahoma", 2, 16)); // NOI18N
-        jLabel7.setText("Requirement Satisfaction:");
-
         javax.swing.GroupLayout newClassjPanel2Layout = new javax.swing.GroupLayout(newClassjPanel2);
         newClassjPanel2.setLayout(newClassjPanel2Layout);
         newClassjPanel2Layout.setHorizontalGroup(
             newClassjPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(newClassjPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(newClassjPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(newClassjPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(classNamejTextField1)
-                        .addComponent(yearTakenjTextField1)
-                        .addComponent(semesterTakenjTextField1)
-                        .addComponent(reqSatisfactionjComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jLabel7))
+                .addGroup(newClassjPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(classNamejTextField1)
+                    .addComponent(yearTakenjTextField1)
+                    .addComponent(semesterTakenjTextField1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         newClassjPanel2Layout.setVerticalGroup(
@@ -236,10 +226,6 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(yearTakenjTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(semesterTakenjTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(reqSatisfactionjComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -2368,7 +2354,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
@@ -2400,7 +2385,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JPanel newClassjPanel2;
     private javax.swing.JLabel percentCompleteLabel;
     private javax.swing.JLabel percentagePointsLabel;
-    private javax.swing.JComboBox<String> reqSatisfactionjComboBox2;
     private java.awt.List scoreList;
     private javax.swing.JTextField scoreReceivedjTextField3;
     private javax.swing.JTextField scoreTextField;
