@@ -9,7 +9,7 @@ This calculator helps me keep track of my grades in classes. It stores informati
 
 ## Installation Instructions
 
-To run this program, you must have Netbeans 8.1 installed. You will need to add the SQLite driver (which is included in the src folder of the project). Follow the below instructions to do so:
+To run this program, you must have Netbeans 8.1 installed. You will need to add the SQLite driver (which is included in the \src\gradecalculatorv3\ folder of the project). Follow the below instructions to do so:
 
 1. Open Netbeans IDE.
 2. Click "File" > "Open Project" and find the unzipped project. Open it.
